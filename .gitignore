@@ -1,0 +1,36 @@
+# Data files (large, download separately)
+data/raw/*.zip
+data/fars/*.csv
+fars_accident_cache.parquet
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Output artifacts (regenerable)
+figs/*.png
+tabs/*.csv
