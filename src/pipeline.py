@@ -5,8 +5,7 @@ Replication and critique of Patel et al. (2026), "Smartphones, Online Music
 Streaming, and Traffic Fatalities," NBER WP 34866.
 
 Usage:
-    make run            # Standard analysis
-    make run-placebos   # With placebo tests
+    make run
 """
 
 import warnings
@@ -126,6 +125,9 @@ def save_tables(df_global, local_df, corr_results, ri_results, dr_results, windo
     print(f"\nTables saved to tabs/")
 
 
+DATA_DIR = "data/fars/"
+
+
 def main():
     import argparse
 
@@ -133,21 +135,10 @@ def main():
         description="Replicate and critique Patel et al. (2026) FARS analysis"
     )
     parser.add_argument(
-        "--local",
-        type=str,
-        required=True,
-        help="Directory containing FARS accident CSVs",
-    )
-    parser.add_argument(
         "--window",
         type=int,
         default=10,
         help="Control window size in days (default: 10)",
-    )
-    parser.add_argument(
-        "--run-placebos",
-        action="store_true",
-        help="Run placebo tests",
     )
     args = parser.parse_args()
 
@@ -157,7 +148,7 @@ def main():
     print("=" * 70)
 
     # Step 1: Load
-    accidents = load_local_fars(args.local)
+    accidents = load_local_fars(DATA_DIR)
     print(f"\nLoaded {len(accidents)} crash records")
 
     # Step 2: Preprocess
@@ -177,10 +168,8 @@ def main():
     corr_results = stream_effect_correlation(df, window=args.window)
     dr_results = dose_response_analysis(df, window=args.window)
 
-    # Step 4: Placebo tests (optional)
-    placebo_results = None
-    if args.run_placebos:
-        placebo_results = run_all_placebos(df, df_global, window=args.window)
+    # Step 4: Placebo tests
+    placebo_results = run_all_placebos(df, df_global, window=args.window)
 
     # Save tables
     save_tables(df_global, local_df, corr_results, ri_results, dr_results, args.window, placebo_results)

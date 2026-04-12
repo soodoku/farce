@@ -41,12 +41,44 @@ We replicate and extend the analysis:
 
 ## Detailed Results
 
+### Data Tables
+
+Full results are available as CSV files:
+
+| Table | Description |
+|-------|-------------|
+| [Local estimates](tabs/t01_local_estimates.csv) | Per-album local δ |
+| [Global estimates](tabs/t02_global_estimates.csv) | Per-album global δ |
+| [Dose-response](tabs/t03_dose_response.csv) | Streams vs effect (20 albums) |
+| [Tier comparison](tabs/t04_tier_comparison.csv) | Top 10 vs albums 11-20 |
+| [RI p-values](tabs/t05_randomization_inference.csv) | Randomization inference |
+| [Leave-one-out](tabs/t06_leave_one_out.csv) | Jackknife sensitivity |
+| [Summary](tabs/t07_summary.csv) | Key statistics |
+| [Placebo tests](tabs/t08_placebo_tests.csv) | Pre-trends, year permutation |
+| [Window sensitivity](tabs/t09_window_sensitivity.csv) | Effect by window size |
+| [Forecast estimates](tabs/t10_forecast_estimates.csv) | Per-album forecast δ |
+| [Forecast summary](tabs/t11_forecast_summary.csv) | Forecast model stats |
+
 ### The Effect Is Real (Statistically)
 
 | Estimator | Pooled δ | SE | t-stat |
 |-----------|----------|-----|--------|
-| Local (paper's ±10 day) | +23.0 deaths | 5.1 | 4.5 |
+| Local (paper's ±10 day)* | +23.0 deaths | 5.1 | 4.5 |
 | Donut-global | +16.1 deaths | 5.0 | 3.2 |
+
+**\*Note on the ±10 day estimator:** The paper's local estimator compares release-day fatalities to the average of the surrounding ±10 days (20 control days total). Unusually, this includes 10 days *after* the release as controls. Standard event study designs use only pre-treatment periods. Including post-treatment days assumes the effect is instantaneous and doesn't persist—if the effect lingers, the control mean is biased upward, deflating the estimate.
+
+### Forecast-Based Estimator
+
+We also implement a forecast-based approach (Gary King style): train a prediction model on non-release days, then compare actual release-day fatalities to model predictions.
+
+| Estimator | Pooled δ (Tier 1) | SE | t-stat |
+|-----------|-------------------|-----|--------|
+| Local (±10 day) | +23.0 deaths | 5.1 | 4.5 |
+| Donut-global | +16.2 deaths | 5.1 | 3.2 |
+| Forecast (Ridge) | +22.6 deaths | 4.9 | 4.6 |
+
+The forecast estimator avoids post-treatment contamination by training only on days outside the ±10 day windows. Cross-validation RMSE: 17.9 deaths/day.
 
 Randomization inference p-values:
 - iid (10 random days): p = 0.0003
@@ -129,7 +161,7 @@ Actual Tier2/Tier1 ratio: **0.80** (expected: ~0.50)
 ### Requirements
 
 ```bash
-pip install pandas numpy matplotlib scipy requests
+pip install pandas numpy matplotlib scipy requests scikit-learn
 ```
 
 ### Usage
@@ -137,7 +169,7 @@ pip install pandas numpy matplotlib scipy requests
 ```bash
 make extract        # Extract CSVs from zips
 make run            # Run analysis
-make run-placebos   # Run with placebo tests
+make run-forecast   # Run forecast-based estimator
 make clean          # Remove extracted files
 ```
 
@@ -145,8 +177,7 @@ make clean          # Remove extracted files
 
 1. Visit [NHTSA FARS Data](https://www.nhtsa.gov/file-downloads)
 2. Download FARS zip files for desired years → place in `data/raw/`
-3. Extract accident CSVs → place in `data/fars/`
-4. Run with `--local data/fars/` flag
+3. Run `make extract` to extract accident CSVs to `data/fars/`
 
 ## Project Structure
 
@@ -165,6 +196,7 @@ farce/
     ├── s03_core.py        # Analysis functions
     ├── s04_placebo.py     # Placebo tests
     ├── s05_visualize.py   # Plotting
+    ├── s06_forecast.py    # Forecast-based estimator
     └── pipeline.py        # Main entry point
 ```
 
@@ -187,5 +219,5 @@ Six-panel figure showing:
 
 ## References
 
-- Patel, Worsham, Liu & Jena (2026). "Smartphones, Online Music Streaming, and Traffic Fatalities." NBER Working Paper 34866.
+- Patel, Worsham, Liu & Jena (2026). "[Smartphones, Online Music Streaming, and Traffic Fatalities](https://www.nber.org/papers/w34866)." NBER Working Paper 34866.
 - [Harvard Gazette coverage](https://news.harvard.edu/gazette/story/2026/02/streaming-a-new-album-release-while-driving-may-increase-risk-of-fatal-car-accidents/)

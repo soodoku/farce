@@ -1,0 +1,12 @@
+metric,value
+model_type,ridge
+n_train_days,6073
+n_excluded_days,502
+cv_rmse,17.998545619491914
+pooled_all_effect,15.145672446616375
+pooled_all_se,3.7041794352474153
+pooled_t1_effect,22.8064503742454
+pooled_t1_se,4.920479204843249
+pooled_t2_effect,17.08259137161992
+pooled_t2_se,7.23703314518754
+pearson_r_streams_effect,-0.18064074296332716

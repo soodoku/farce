@@ -32,5 +32,4 @@ env/
 Thumbs.db
 
 # Output artifacts (regenerable)
-figs/*.png
-tabs/*.csv
+# figs/*.png  # Now tracked in git
