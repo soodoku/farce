@@ -78,15 +78,15 @@ def load_local_fars(directory="."):
     for f in sorted(Path(directory).glob("*ccident*.csv")):
         print(f"Loading {f.name}...")
         try:
-            frames.append(pd.read_csv(f))
+            frames.append(pd.read_csv(f, low_memory=False))
         except UnicodeDecodeError:
-            frames.append(pd.read_csv(f, encoding="latin-1"))
+            frames.append(pd.read_csv(f, encoding="latin-1", low_memory=False))
     for f in sorted(Path(directory).glob("*CCIDENT*.CSV")):
         print(f"Loading {f.name}...")
         try:
-            frames.append(pd.read_csv(f))
+            frames.append(pd.read_csv(f, low_memory=False))
         except UnicodeDecodeError:
-            frames.append(pd.read_csv(f, encoding="latin-1"))
+            frames.append(pd.read_csv(f, encoding="latin-1", low_memory=False))
     if not frames:
         raise FileNotFoundError(
             "No FARS Accident CSV files found. Download from:\n"
