@@ -33,3 +33,4 @@ Thumbs.db
 
 # Output artifacts (regenerable)
 # figs/*.png  # Now tracked in git
+.Rhistory
