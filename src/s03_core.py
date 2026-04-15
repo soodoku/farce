@@ -22,6 +22,27 @@ from src.constants import (
 from src.s02_preprocess import _build_design
 
 
+def _ols_with_se(X, y):
+    """OLS with standard errors (handles multicollinearity via ridge regularization)."""
+    n, k = X.shape
+    XtX = X.T @ X
+    Xty = X.T @ y
+
+    ridge_lambda = 1e-8
+    XtX_reg = XtX + ridge_lambda * np.eye(k)
+    beta = np.linalg.solve(XtX_reg, Xty)
+
+    fitted = X @ beta
+    resid = y - fitted
+
+    XtX_inv = np.linalg.inv(XtX_reg)
+    sigma2 = np.sum(resid**2) / max(n - k, 1)
+    var_beta = sigma2 * XtX_inv
+    se = np.sqrt(np.maximum(np.diag(var_beta), 0))
+
+    return beta, se, fitted, resid
+
+
 def _ols_residuals(X, y):
     """OLS via normal equations, return (beta, fitted, residuals)."""
     XtX = X.T @ X
@@ -70,6 +91,139 @@ def local_estimate(df, window=10):
         )
 
     return pd.DataFrame(results)
+
+
+def paper_regression_estimate(df, albums=None, window=10, sample_period=None):
+    """
+    Paper's exact regression specification from page 7:
+
+    "multivariable linear regression at the album-day level to estimate national
+    daily counts of traffic fatalities in each of the 10 days surrounding album
+    releases (indicator variables for each day relative to album release, defined
+    as day zero), adjusting for fixed effects (i.e., indicators) of federal holidays,
+    day-of-week (Monday through Sunday), week-of-year (weeks 1 through 52), and
+    calendar-year."
+
+    Parameters
+    ----------
+    df : DataFrame
+        Daily fatality data
+    albums : list
+        Albums to analyze (default: ALBUMS_TIER1)
+    window : int
+        Days before/after release to include (default: 10)
+    sample_period : tuple
+        (start_year, end_year) to filter sample (default: None = all years)
+
+    Returns
+    -------
+    dict
+        Regression results including treatment effect and SE
+    """
+    if albums is None:
+        albums = ALBUMS_TIER1
+
+    df = df.copy()
+
+    if sample_period is not None:
+        start_year, end_year = sample_period
+        df = df[(df["date"].dt.year >= start_year) & (df["date"].dt.year <= end_year)]
+
+    df["dow"] = df["date"].dt.dayofweek
+    df["week_of_year"] = df["date"].dt.isocalendar().week.astype(int)
+    df["year"] = df["date"].dt.year
+
+    holidays = us_holidays(df["year"].unique())
+    df["holiday"] = df["date"].dt.date.isin(holidays).astype(int)
+
+    album_dfs = []
+    for a in albums:
+        dt = pd.to_datetime(a[2])
+        for offset in range(-window, window + 1):
+            day = dt + pd.Timedelta(days=offset)
+            row = df[df["date"] == day]
+            if len(row) == 0:
+                continue
+
+            album_dfs.append({
+                "artist": a[0],
+                "album": a[1],
+                "release_date": a[2],
+                "day": day,
+                "day_relative": offset,
+                "fatalities": row["fatalities"].values[0],
+                "dow": row["dow"].values[0],
+                "week_of_year": row["week_of_year"].values[0],
+                "year": row["year"].values[0],
+                "holiday": row["holiday"].values[0],
+            })
+
+    reg_df = pd.DataFrame(album_dfs)
+
+    reg_df["release_day"] = (reg_df["day_relative"] == 0).astype(int)
+
+    dow_dummies = pd.get_dummies(reg_df["dow"], prefix="dow", drop_first=True, dtype=float)
+    week_dummies = pd.get_dummies(reg_df["week_of_year"], prefix="week", drop_first=True, dtype=float)
+    year_dummies = pd.get_dummies(reg_df["year"], prefix="year", drop_first=True, dtype=float)
+
+    X = pd.concat([
+        dow_dummies,
+        week_dummies,
+        year_dummies,
+    ], axis=1)
+    X["holiday"] = reg_df["holiday"].values
+    X["release_day"] = reg_df["release_day"].values
+    X["const"] = 1.0
+
+    y = reg_df["fatalities"].values.astype(float)
+
+    beta, se, fitted, resid = _ols_with_se(X.values, y)
+
+    release_day_idx = list(X.columns).index("release_day")
+    treatment_effect = beta[release_day_idx]
+    treatment_se = se[release_day_idx]
+
+    control_mean = reg_df[reg_df["release_day"] == 0]["fatalities"].mean()
+    pct_effect = 100 * treatment_effect / control_mean
+
+    per_album_effects = []
+    for a in albums:
+        album_rows = reg_df[
+            (reg_df["release_date"] == a[2]) & (reg_df["day_relative"] == 0)
+        ]
+        if len(album_rows) == 0:
+            continue
+
+        y_release = album_rows["fatalities"].values[0]
+
+        control_rows = reg_df[
+            (reg_df["release_date"] == a[2]) & (reg_df["day_relative"] != 0)
+        ]
+        y_control = control_rows["fatalities"].mean() if len(control_rows) > 0 else np.nan
+
+        per_album_effects.append({
+            "artist": a[0],
+            "album": a[1],
+            "date": a[2],
+            "y_release": y_release,
+            "y_control": y_control,
+            "delta_raw": y_release - y_control if not np.isnan(y_control) else np.nan,
+        })
+
+    per_album_df = pd.DataFrame(per_album_effects)
+
+    return {
+        "treatment_effect": treatment_effect,
+        "treatment_se": treatment_se,
+        "t_stat": treatment_effect / treatment_se,
+        "pct_effect": pct_effect,
+        "control_mean": control_mean,
+        "n_obs": len(reg_df),
+        "n_albums": len(albums),
+        "n_release_days": reg_df["release_day"].sum(),
+        "per_album_df": per_album_df,
+        "sample_period": sample_period,
+    }
 
 
 def global_estimate(df, donut_window=None):

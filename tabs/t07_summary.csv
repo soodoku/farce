@@ -1,12 +1,15 @@
 metric,value
 n_albums_tier1,10.0
 n_albums_tier2,10.0
+n_albums_tier3,7.0
 window_days,10.0
 local_delta_mean,22.975
 local_delta_se,5.1229724986790846
 jackknife_se,5.122972498679083
-pearson_r,-0.22632637362189692
-spearman_r,-0.11278195488721804
+pearson_r,-0.1736923959434471
+spearman_r,-0.0781954887218045
 tier1_avg,16.825991079895008
 tier2_avg,13.547847326829071
+tier3_avg_forecast,1.4346769428555544
+tier3_se_forecast,3.100158070570563
 tier2_tier1_ratio,0.8051738089304638

@@ -1,0 +1,6 @@
+estimator,sample,effect,se,pct_effect,n_albums,source
+Paper (reported Figure 2B),Tier 1 (2017-2022),18.2,5.5,15.1,10,Patel et al. (2026)
+Paper spec (our replication),Tier 1 (2017-2022),17.61242092151765,4.75251629902288,14.44529089318651,10,This analysis
+Paper spec (full data),Tier 1 (all years),17.61242092151765,4.75251629902288,14.44529089318651,10,This analysis
+Paper spec (out-of-sample),Tier 3 (2022-2024),-7.981643991307173,6.997347449914602,-7.257925167465603,7,This analysis
+Paper spec (all tiers),All 27 albums,9.66495536209175,3.229852681651996,8.452629193504809,27,This analysis

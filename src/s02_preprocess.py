@@ -125,14 +125,34 @@ def build_daily_series(accidents):
     return daily
 
 
-def _build_design(df):
-    """Build DOW + month + year + holiday + crash predictor design matrix."""
-    X = pd.get_dummies(
-        df[["dow", "month", "year"]],
-        columns=["dow", "month", "year"],
-        drop_first=True,
-        dtype=float,
-    )
+def _build_design(df, use_week_of_year=False):
+    """
+    Build design matrix with fixed effects.
+
+    Parameters
+    ----------
+    df : DataFrame
+        Daily data with dow, month, year columns
+    use_week_of_year : bool
+        If True, use week-of-year (52 levels) instead of month (12 levels).
+        Paper uses week-of-year FEs.
+    """
+    if use_week_of_year:
+        df = df.copy()
+        df["week_of_year"] = df["date"].dt.isocalendar().week.astype(int)
+        X = pd.get_dummies(
+            df[["dow", "week_of_year", "year"]],
+            columns=["dow", "week_of_year", "year"],
+            drop_first=True,
+            dtype=float,
+        )
+    else:
+        X = pd.get_dummies(
+            df[["dow", "month", "year"]],
+            columns=["dow", "month", "year"],
+            drop_first=True,
+            dtype=float,
+        )
     X["holiday"] = df["holiday"].values
     X["holiday_adj"] = df["holiday_adj"].values
 
