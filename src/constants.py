@@ -5,7 +5,8 @@ Album data is loaded from data/albums.csv.
 See data/albums_sources.md for data provenance.
 
 Tiers:
-  1 = Paper's original 10 albums (2017-2022)
+  0 = Pre-2018 streaming era (2015-2017) - test whether effect exists before paper's cutoff
+  1 = Paper's original 10 albums (2018-2022)
   2 = Extended analysis albums 11-20
   3 = Post-2022 and additional albums for extended analysis
 """
@@ -23,46 +24,49 @@ def load_albums():
     df = pd.read_csv(DATA_DIR / "albums.csv")
     albums = []
     for _, row in df.iterrows():
-        albums.append((
-            row["artist"],
-            row["album"],
-            row["release_date"],
-            row["day_of_week"],
-            row["streams_millions"],
-            row["tier"],
-            row["paper_sample"],
-        ))
+        albums.append(
+            (
+                row["artist"],
+                row["album"],
+                row["release_date"],
+                row["day_of_week"],
+                row["streams_millions"],
+                row["tier"],
+                row["paper_sample"],
+            )
+        )
     return albums
 
 
 _albums = load_albums()
 
+# Pre-2018 streaming era (tier 0) - test whether effect exists before paper's cutoff
+ALBUMS_TIER0 = [(a[0], a[1], a[2], a[3], a[4]) for a in _albums if a[5] == 0]
+
 # Paper's original sample (tier 1, paper_sample=TRUE)
-ALBUMS_TIER1 = [
-    (a[0], a[1], a[2], a[3], a[4]) for a in _albums if a[5] == 1
-]
+ALBUMS_TIER1 = [(a[0], a[1], a[2], a[3], a[4]) for a in _albums if a[5] == 1]
 
 # Extended analysis (tier 2)
-ALBUMS_TIER2 = [
-    (a[0], a[1], a[2], a[3], a[4]) for a in _albums if a[5] == 2
-]
+ALBUMS_TIER2 = [(a[0], a[1], a[2], a[3], a[4]) for a in _albums if a[5] == 2]
 
 # Post-2022 and additional albums (tier 3)
-ALBUMS_TIER3 = [
-    (a[0], a[1], a[2], a[3], a[4]) for a in _albums if a[5] == 3
-]
+ALBUMS_TIER3 = [(a[0], a[1], a[2], a[3], a[4]) for a in _albums if a[5] == 3]
 
 # Backward compatibility
 ALBUMS = [(a[0], a[1], a[2], a[3]) for a in ALBUMS_TIER1]
 ALBUMS_ALL = ALBUMS_TIER1 + ALBUMS_TIER2
-ALBUMS_EXTENDED = ALBUMS_TIER1 + ALBUMS_TIER2 + ALBUMS_TIER3
+ALBUMS_EXTENDED = ALBUMS_TIER0 + ALBUMS_TIER1 + ALBUMS_TIER2 + ALBUMS_TIER3
+ALBUMS_FULL = ALBUMS_EXTENDED
 
 # Release date sets
+RELEASE_DATES_TIER0 = {d.date() for d in pd.to_datetime([a[2] for a in ALBUMS_TIER0])}
 RELEASE_DATES = {d.date() for d in pd.to_datetime([a[2] for a in ALBUMS])}
 RELEASE_DATES_TIER2 = {d.date() for d in pd.to_datetime([a[2] for a in ALBUMS_TIER2])}
 RELEASE_DATES_TIER3 = {d.date() for d in pd.to_datetime([a[2] for a in ALBUMS_TIER3])}
 RELEASE_DATES_ALL = RELEASE_DATES | RELEASE_DATES_TIER2
-RELEASE_DATES_EXTENDED = RELEASE_DATES | RELEASE_DATES_TIER2 | RELEASE_DATES_TIER3
+RELEASE_DATES_EXTENDED = (
+    RELEASE_DATES_TIER0 | RELEASE_DATES | RELEASE_DATES_TIER2 | RELEASE_DATES_TIER3
+)
 
 
 def us_holidays(years):

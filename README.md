@@ -1,6 +1,6 @@
 # FARCE: FARS Album Release Coincidence Examination
 
-A replication and critique of Patel, Worsham, Liu & Jena (2026), "[Smartphones, Online Music Streaming, and Traffic Fatalities](https://www.nber.org/papers/w34866)," NBER Working Paper 34866. [[Local PDF]](w34866.pdf)
+A constructive replication of Patel, Worsham, Liu & Jena (2026), "[Smartphones, Online Music Streaming, and Traffic Fatalities](https://www.nber.org/papers/w34866)," NBER Working Paper 34866. [[Local PDF]](w34866.pdf)
 
 ## The Paper's Claims
 
@@ -19,99 +19,185 @@ Patel et al. (2026) analyze 10 major album releases from 2017-2022 and report:
 | Source | Effect | SE | % Effect |
 |--------|--------|-----|----------|
 | Paper (Figure 2B) | +18.2 deaths | ~5.5 | +15.1% |
-| Our replication | +17.6 deaths | 4.8 | +14.4% |
+| Our replication | +17.6 deaths | 7.45 | +14.4% |
 
 - **Difference: 0.6 deaths** (< 1 SE)
 - Same methodology: week-of-year fixed effects, day-of-week, year, holiday indicators
 - Same sample: Tier 1 albums, 2017-2022
+- Randomization inference confirms significance (p < 0.001)
+- **Note:** Our SE uses cluster-robust estimation (clustering by album) to account for only 10 independent units
 
-The statistical effect is real. Randomization inference confirms significance (p < 0.001).
+The statistical effect replicates. The question is how to interpret it. See [t12_paper_replication.md](tabs/t12_paper_replication.md).
 
-## Issues Identified
+## Interpretation Challenges
 
-### Issue 1: No Dose-Response Relationship
+### The Friday Problem
 
-If streaming causes distracted driving deaths, more streams should produce more deaths. The data show the opposite:
+9 of 10 albums in the study were released on Friday. This creates a fundamental identification problem:
+
+| Metric | Value |
+|--------|-------|
+| Friday baseline deaths | 110.6 |
+| Overall average | 101.4 |
+| DOW balance (SMD) | 0.80 |
+| DOW balance (p-value) | 0.06 |
+
+We test this directly: randomly selecting ANY 10 Fridays from the 939 available in 2017-2022:
+
+| Metric | Value |
+|--------|-------|
+| False positive rate | **100%** |
+| Mean effect from random Fridays | 25.88 deaths |
+| 95th percentile | 31.91 deaths |
+| Actual observed effect | 16.1 deaths |
+
+The observed effect (16.1) is **below average** for random Friday selection. See [t18_friday_fpr.md](tabs/t18_friday_fpr.md) and [t24_balance_check.md](tabs/t24_balance_check.md).
+
+### Out-of-Sample Failure
+
+| Tier | Period | N | Effect | t-stat |
+|------|--------|---|--------|--------|
+| 0 | Pre-2018 | 10 | +6.4 | 1.44 |
+| 1 | Paper (2018-2022) | 10 | +16.1 | 3.20 |
+| 2 | Extended | 10 | +13.1 | 2.09 |
+| **3** | **Post-2022** | **7** | **-2.8** | **-0.96** |
+
+The effect reverses direction in the post-paper period. See [t20_extended_series.md](tabs/t20_extended_series.md).
+
+### No Dose-Response
+
+If streaming causes distracted driving deaths, more streams should produce more deaths:
 
 | Album | Streams (M) | Effect |
 |-------|-------------|--------|
-| Tortured Poets (2024) | 313 | -2 deaths |
-| Midnights (2022) | 185 | +5 deaths |
-| Her Loss (2022) | 97 | +63 deaths |
+| Midnights | 185 | -2 deaths |
+| Certified Lover Boy | 153 | +11 deaths |
+| Scorpion | 132 | +16 deaths |
+| Her Loss | 97 | +57 deaths |
 
-**Pearson r = -0.17** (negative correlation — more streams → *smaller* effects)
+**Pearson r = -0.17** — the correlation is in the wrong direction. See [t03_dose_response.md](tabs/t03_dose_response.md).
 
-The largest streaming day in Spotify history (Tortured Poets, 313M first-day streams) shows a *negative* effect on fatalities.
+### Placebo Concerns
 
-### Issue 2: Out-of-Sample Failure
+We apply the same methodology to outcomes that should not respond to album releases:
 
-The paper analyzed 2017-2022 releases. We extended the analysis to 2023-2024 (7 additional albums):
+| Outcome | Effect | t-stat |
+|---------|--------|--------|
+| Mean crash latitude | +0.36° | **3.02** |
+| % railroad crossing | -0.02% | -2.08 |
+| % work zone | -0.6% | -1.80 |
 
-| Sample | Estimator | Effect | SE |
-|--------|-----------|--------|-----|
-| Tier 1 (2017-2022) | Paper spec | +17.6 | 4.8 |
-| Tier 3 (2023-2024) | Paper spec | -8.0 | 7.0 |
+Additionally, the joint F-test for pre-trends is significant (p = 0.03), and day -6 shows a large spike (+16.5 deaths, t = 3.54) before any album release. See [t28b_absurd_fars_placebos.md](tabs/t28b_absurd_fars_placebos.md) and [t32_parallel_trends.md](tabs/t32_parallel_trends.md).
 
-Key out-of-sample results:
+## Supporting Evidence
 
-| Album | Streams (M) | Effect |
-|-------|-------------|--------|
-| Tortured Poets | 313 | -2.1 |
-| UTOPIA | 128 | +10.5 |
-| For All The Dogs | 109 | -12.8 |
-| Cowboy Carter | 76 | -0.4 |
-| Hit Me Hard and Soft | 73 | +7.0 |
-| SOS | 68 | +9.4 |
-| One Thing at a Time | 52 | -1.5 |
+Several findings are consistent with the paper's claims:
 
-**Average out-of-sample effect: +1.4 deaths** (vs. +17.6 for original sample). The pattern found in 2017-2022 does not replicate forward.
+### Event Study
 
-### Issue 3: Outlier Dependence
+The effect is concentrated on day 0:
 
-The effect is driven by a single release:
+![Event Study](figs/event_study.png)
 
-- **Her Loss** (Drake & 21 Savage, 2022): +59.5 deaths
-- Total Tier 1 effect: 229.8 deaths across 10 albums
-- **Her Loss accounts for 26% of the total effect**
+| Day | Effect | 95% CI |
+|-----|--------|--------|
+| -1 | +1.5 | [-4.4, +7.4] |
+| 0 | +16.1 | [+6.3, +26.0] |
+| +1 | +8.8 | [+0.4, +17.2] |
 
-Leave-one-out analysis shows removing Her Loss reduces the average per-album effect from +23.0 to +18.9 deaths.
+See [t13_dynamic_effects.md](tabs/t13_dynamic_effects.md).
+
+### Sober vs Drunk Crashes
+
+If distraction (not alcohol) drives the effect, sober crashes should show a larger effect:
+
+| Sample | Effect | SE | % Effect |
+|--------|--------|-----|----------|
+| Sober crashes | +14.7 | 2.9 | +21.6% |
+| Drunk crashes | +3.5 | 4.5 | +11.7% |
+
+This is consistent with the distraction mechanism. See [t22_drunk_mechanism.md](tabs/t22_drunk_mechanism.md).
+
+### Specification Curve
+
+We test 35 specifications varying window size, sample period, and album set:
+
+![Specification Curve](figs/multiverse.png)
+
+| Specification | Range |
+|---------------|-------|
+| Effect estimates | +4.4 to +16.3 deaths |
+| % significant (p < 0.05) | 86% |
+| All specifications | Same direction |
+
+See [t29_multiverse.md](tabs/t29_multiverse.md).
+
+### Weather Controls
+
+The effect is robust to weather controls:
+
+| Model | Effect | SE |
+|-------|--------|-----|
+| Base (DOW+Month+Year) | +15.8 | 4.4 |
+| +Rain+Fog+Cloudy | +15.6 | 4.4 |
+
+See [t21_fars_controls.md](tabs/t21_fars_controls.md).
+
+## Summary
+
+| Finding | Result | Table |
+|---------|--------|-------|
+| Replication | 17.6 vs 18.2 deaths | [t12](tabs/t12_paper_replication.md) |
+| Friday FPR | **100%** | [t18](tabs/t18_friday_fpr.md) |
+| Post-2022 effect | -2.8 deaths (wrong sign) | [t20](tabs/t20_extended_series.md) |
+| Dose-response | r = -0.17 (wrong sign) | [t03](tabs/t03_dose_response.md) |
+| Placebo (latitude) | t = 3.0 (significant) | [t28b](tabs/t28b_absurd_fars_placebos.md) |
+| Pre-trend test | p = 0.03 (significant) | [t32](tabs/t32_parallel_trends.md) |
+| DOW balance | SMD = 0.80 | [t24](tabs/t24_balance_check.md) |
+
+We replicate the paper's statistical finding. However:
+- Friday selection bias can fully explain the effect (FPR = 100%)
+- The finding does not generalize to the post-paper period
+- There is no dose-response relationship
+- Some placebo tests fail unexpectedly
 
 ## Data
 
 | Dataset | Coverage | N |
 |---------|----------|---|
 | FARS fatalities | 2007-2024 | Extended beyond paper's 2017-2022 |
-| Albums | 27 total | 10 Tier 1 + 10 Tier 2 + 7 Tier 3 |
+| Albums | 37 total | 10 Tier 1 + 10 Tier 2 + 10 Pre-2018 + 7 Post-2022 |
 
 - **FARS**: [NHTSA Fatality Analysis Reporting System](https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars)
 - **Streaming data**: Spotify Newsroom, Billboard, Chart Data (see [albums_sources.md](data/albums_sources.md))
-
-## Methodology
-
-| Analysis | Description |
-|----------|-------------|
-| Paper's specification | Week-of-year FEs, DOW, year, holiday indicators |
-| Forecast estimator | Train model on non-release days, predict counterfactual |
-| Donut-global | Regression excluding ±10 days around releases |
-| Dose-response | Correlation between streams and fatality effect |
-| Randomization inference | Placebo tests, year permutation, window sensitivity |
 
 ## Output Tables
 
 | File | Description |
 |------|-------------|
-| [t01_local_estimates.csv](tabs/t01_local_estimates.csv) | Per-album local effects |
-| [t02_global_estimates.csv](tabs/t02_global_estimates.csv) | Per-album global effects |
-| [t03_dose_response.csv](tabs/t03_dose_response.csv) | Streams vs effect |
-| [t04_tier_comparison.csv](tabs/t04_tier_comparison.csv) | Tier 1 vs Tier 2 |
-| [t05_randomization_inference.csv](tabs/t05_randomization_inference.csv) | RI p-values |
-| [t06_leave_one_out.csv](tabs/t06_leave_one_out.csv) | Jackknife analysis |
-| [t07_summary.csv](tabs/t07_summary.csv) | Summary statistics |
-| [t08_placebo_tests.csv](tabs/t08_placebo_tests.csv) | Placebo results |
-| [t09_window_sensitivity.csv](tabs/t09_window_sensitivity.csv) | Window sensitivity |
-| [t10_forecast_estimates.csv](tabs/t10_forecast_estimates.csv) | Forecast estimates |
-| [t11_forecast_summary.csv](tabs/t11_forecast_summary.csv) | Forecast summary |
-| [t12_paper_replication.csv](tabs/t12_paper_replication.csv) | Paper replication comparison |
+| [t01_local_estimates.md](tabs/t01_local_estimates.md) | Per-album local effects |
+| [t02_global_estimates.md](tabs/t02_global_estimates.md) | Per-album global effects |
+| [t03_dose_response.md](tabs/t03_dose_response.md) | Streams vs effect |
+| [t04_tier_comparison.md](tabs/t04_tier_comparison.md) | Tier 1 vs Tier 2 |
+| [t05_randomization_inference.md](tabs/t05_randomization_inference.md) | RI p-values |
+| [t06_leave_one_out.md](tabs/t06_leave_one_out.md) | Jackknife analysis |
+| [t07_summary.md](tabs/t07_summary.md) | Summary statistics |
+| [t08_placebo_tests.md](tabs/t08_placebo_tests.md) | Placebo results |
+| [t09_window_sensitivity.md](tabs/t09_window_sensitivity.md) | Window sensitivity |
+| [t10_forecast_estimates.md](tabs/t10_forecast_estimates.md) | Forecast estimates |
+| [t11_forecast_summary.md](tabs/t11_forecast_summary.md) | Forecast summary |
+| [t12_paper_replication.md](tabs/t12_paper_replication.md) | Paper replication comparison |
+| [t13_dynamic_effects.md](tabs/t13_dynamic_effects.md) | Event study |
+| [t18_friday_fpr.md](tabs/t18_friday_fpr.md) | Friday false positive rate |
+| [t20_extended_series.md](tabs/t20_extended_series.md) | Extended time series |
+| [t21_fars_controls.md](tabs/t21_fars_controls.md) | Weather controls |
+| [t22_drunk_mechanism.md](tabs/t22_drunk_mechanism.md) | Sober vs drunk |
+| [t23_power_analysis.md](tabs/t23_power_analysis.md) | Power analysis |
+| [t24_balance_check.md](tabs/t24_balance_check.md) | Covariate balance |
+| [t27_sensitivity.md](tabs/t27_sensitivity.md) | Sensitivity analysis |
+| [t28b_absurd_fars_placebos.md](tabs/t28b_absurd_fars_placebos.md) | Placebo outcomes |
+| [t29_multiverse.md](tabs/t29_multiverse.md) | Specification curve |
+| [t32_parallel_trends.md](tabs/t32_parallel_trends.md) | Parallel trends test |
 
 ## Usage
 
@@ -122,10 +208,9 @@ pip install pandas numpy matplotlib scipy requests scikit-learn
 # Run analysis
 make extract        # Extract FARS CSVs from zips
 make run            # Run main analysis
-make run-forecast   # Run forecast estimator (standard sample)
 
 # Extended analysis (includes 2023-2024 albums)
-python3 -m src.s06_forecast --extended
+python3 -m src.pipeline --extended
 ```
 
 ### Data Setup
@@ -150,15 +235,10 @@ farce/
 │
 ├── src/
 │   ├── constants.py        # Load albums from CSV
-│   ├── s01_load.py         # FARS data loading
-│   ├── s02_preprocess.py   # Daily aggregation, residualization
-│   ├── s03_core.py         # Local/global estimators, RI, dose-response
-│   ├── s04_placebo.py      # Placebo tests
-│   ├── s05_visualize.py    # Plotting
-│   ├── s06_forecast.py     # Forecast-based estimator
-│   └── pipeline.py         # Main entry point
+│   ├── pipeline.py         # Main entry point
+│   └── ...                 # Analysis modules
 │
-├── tabs/                   # Output tables (CSV)
+├── tabs/                   # Output tables (Markdown)
 └── figs/                   # Output figures (PNG)
 ```
 

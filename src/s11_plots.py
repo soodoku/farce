@@ -1,17 +1,26 @@
 """
-Visualization functions for FARS album release study.
+Visualization — all plotting functions for the analysis.
+
+Functions for creating figures:
+- plot_results: Multi-panel summary plot
+- plot_event_study: Dynamic effects event study
+- plot_multiverse: Specification curve analysis
 """
 
+from pathlib import Path
+
+import matplotlib.dates as mdates
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 
 from src.constants import ALBUMS, RELEASE_DATES
-from src.s03_core import local_estimate
+from src.s04_estimate import local_estimate
 
 
-def plot_results(df, df_global=None, ri_results=None, local_df=None, corr_results=None, show=True):
+def plot_results(
+    df, df_global=None, ri_results=None, local_df=None, corr_results=None, show=True
+):
     """Multi-panel plot: time series, event study, decomposition, RI null, LOO, dose-response."""
     n_panels = 2
     if df_global is not None:
@@ -47,7 +56,9 @@ def plot_results(df, df_global=None, ri_results=None, local_df=None, corr_result
             )
 
     ax.set_ylabel("z-score (residual fatalities)")
-    ax.set_title("Daily US Traffic Fatalities: Residuals after DOW/Month/Year/Holiday FEs")
+    ax.set_title(
+        "Daily US Traffic Fatalities: Residuals after DOW/Month/Year/Holiday FEs"
+    )
     ax.legend()
     ax.xaxis.set_major_locator(mdates.YearLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
@@ -213,9 +224,11 @@ def plot_results(df, df_global=None, ri_results=None, local_df=None, corr_result
         influences = avg_all - loo_avgs
 
         colors = [
-            "red"
-            if inf > np.std(influences)
-            else ("blue" if inf < -np.std(influences) else "gray")
+            (
+                "red"
+                if inf > np.std(influences)
+                else ("blue" if inf < -np.std(influences) else "gray")
+            )
             for inf in influences
         ]
 
@@ -230,7 +243,9 @@ def plot_results(df, df_global=None, ri_results=None, local_df=None, corr_result
         ax.set_yticks(range(n))
         ax.set_yticklabels(album_labels_loo, fontsize=8)
         ax.set_xlabel("Pooled δ when album dropped")
-        ax.set_title("Leave-One-Out Sensitivity: Red = inflates estimate, Blue = deflates")
+        ax.set_title(
+            "Leave-One-Out Sensitivity: Red = inflates estimate, Blue = deflates"
+        )
         ax.legend(fontsize=8)
 
         for i, (loo, inf) in enumerate(zip(loo_avgs, influences)):
@@ -295,9 +310,117 @@ def plot_results(df, df_global=None, ri_results=None, local_df=None, corr_result
                 )
 
     plt.tight_layout()
+    Path("figs").mkdir(exist_ok=True)
     plt.savefig("figs/analysis.png", dpi=150)
     print("\nPlot saved to figs/analysis.png")
     if show:
         plt.show()
     else:
         plt.close()
+
+
+def plot_event_study(dynamic_results, show=True):
+    """
+    Create event study plot showing day-by-day effects.
+    """
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    days = dynamic_results["day"].values
+    effects = dynamic_results["effect"].values
+    ci_lower = dynamic_results["ci_lower"].values
+    ci_upper = dynamic_results["ci_upper"].values
+
+    ax.fill_between(
+        days, ci_lower, ci_upper, alpha=0.3, color="steelblue", label="95% CI"
+    )
+    ax.plot(
+        days,
+        effects,
+        marker="o",
+        markersize=8,
+        color="steelblue",
+        linewidth=2,
+        label="Effect",
+    )
+
+    ax.axhline(0, color="gray", linewidth=1, linestyle="-")
+    ax.axvline(
+        0, color="red", linewidth=2, linestyle="--", alpha=0.7, label="Release day"
+    )
+
+    ax.set_xlabel("Days relative to album release", fontsize=12)
+    ax.set_ylabel("Excess fatalities (vs. expected)", fontsize=12)
+    ax.set_title(
+        "Dynamic Effects: Traffic Fatalities Around Album Release", fontsize=14
+    )
+    ax.legend(fontsize=10)
+
+    ax.set_xticks(days)
+
+    plt.tight_layout()
+    Path("figs").mkdir(exist_ok=True)
+    plt.savefig("figs/event_study.png", dpi=150)
+    print("\nPlot saved to figs/event_study.png")
+
+    if show:
+        plt.show()
+    else:
+        plt.close()
+
+    return fig
+
+
+def plot_multiverse(multiverse_df, show=True):
+    """
+    Create multiverse specification plot.
+
+    Shows distribution of effects across all specifications.
+    """
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+    ax1 = axes[0]
+    effects = multiverse_df["effect"].values
+    ax1.hist(effects, bins=15, edgecolor="black", alpha=0.7, color="steelblue")
+    ax1.axvline(0, color="red", linestyle="--", linewidth=2, label="Null (0)")
+    ax1.axvline(
+        np.median(effects),
+        color="green",
+        linestyle="-",
+        linewidth=2,
+        label=f"Median ({np.median(effects):+.1f})",
+    )
+    ax1.set_xlabel("Effect size (deaths)", fontsize=12)
+    ax1.set_ylabel("Number of specifications", fontsize=12)
+    ax1.set_title("Distribution of Effects Across Specifications", fontsize=14)
+    ax1.legend()
+
+    ax2 = axes[1]
+    sorted_df = multiverse_df.sort_values("effect").reset_index(drop=True)
+    colors = ["red" if p < 0.05 else "gray" for p in sorted_df["p_value"]]
+
+    ax2.barh(range(len(sorted_df)), sorted_df["effect"], color=colors, alpha=0.7)
+    ax2.axvline(0, color="black", linestyle="-", linewidth=1)
+    ax2.set_xlabel("Effect size (deaths)", fontsize=12)
+    ax2.set_ylabel("Specification (sorted by effect)", fontsize=12)
+    ax2.set_title("Specification Curve", fontsize=14)
+
+    from matplotlib.patches import Patch
+
+    legend_elements = [
+        Patch(facecolor="red", alpha=0.7, label="p < 0.05"),
+        Patch(facecolor="gray", alpha=0.7, label="p >= 0.05"),
+    ]
+    ax2.legend(handles=legend_elements, loc="lower right")
+
+    plt.tight_layout()
+
+    Path("figs").mkdir(exist_ok=True)
+    plt.savefig("figs/multiverse.png", dpi=150)
+    print("\nPlot saved to figs/multiverse.png")
+
+    if show:
+        plt.show()
+    else:
+        plt.close()
+
+    return fig

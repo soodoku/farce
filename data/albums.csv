@@ -1,4 +1,14 @@
 artist,album,release_date,day_of_week,streams_millions,tier,paper_sample
+The Weeknd,Beauty Behind the Madness,2015-08-28,Friday,50,0,FALSE
+Justin Bieber,Purpose,2015-11-13,Friday,55,0,FALSE
+Rihanna,ANTI,2016-01-28,Thursday,45,0,FALSE
+Beyoncé,Lemonade,2016-04-23,Saturday,70,0,FALSE
+Drake,Views,2016-04-29,Friday,80,0,FALSE
+Frank Ocean,Blonde,2016-08-20,Saturday,35,0,FALSE
+J. Cole,4 Your Eyez Only,2016-12-09,Friday,40,0,FALSE
+Ed Sheeran,÷,2017-03-03,Friday,60,0,FALSE
+Drake,More Life,2017-03-18,Saturday,65,0,FALSE
+Kendrick Lamar,DAMN.,2017-04-14,Friday,70,0,FALSE
 Taylor Swift,Midnights,2022-10-21,Friday,184.6,1,TRUE
 Drake,Certified Lover Boy,2021-09-03,Friday,153.4,1,TRUE
 Bad Bunny,Un Verano Sin Ti,2022-05-06,Friday,183.0,1,TRUE

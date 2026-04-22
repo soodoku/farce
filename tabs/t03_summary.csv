@@ -1,8 +1,0 @@
-metric,value
-local_delta_mean,22.975
-local_delta_se,5.1229724986790846
-pearson_r,-0.2230511667273805
-p_iid,0.0003
-p_fri_sun,0.0001
-p_block,0.0009
-window_days,10.0
