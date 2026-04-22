@@ -5,7 +5,7 @@ Functions for placebo and falsification tests:
 - Year permutation placebo (same dates, different years)
 - S&P 500 placebo (absurd outcome)
 - Placebo outcomes (shouldn't be affected by streaming)
-- Absurd FARS placebos (structural variables)
+- Structural FARS placebos (structural variables)
 - Best-Fridays false positive rate
 """
 
@@ -203,9 +203,9 @@ def sp500_placebo(window=10):
 
     print("\nINTERPRETATION:")
     if abs(t_stat) > 2:
-        print(f"  WARNING: t-stat = {t_stat:.2f} is 'significant' (|t| > 2)!")
+        print(f"  NOTE: t-stat = {t_stat:.2f} is 'significant' (|t| > 2).")
         print("  Album releases appear to 'cause' stock market movements.")
-        print("  This is OBVIOUSLY SPURIOUS — demonstrates methodology is unreliable.")
+        print("  This is likely spurious — suggests methodology may be sensitive to noise.")
     else:
         print(f"  t-stat = {t_stat:.2f} is not significant.")
         print("  Good: No spurious 'effect' on unrelated outcome.")
@@ -349,10 +349,10 @@ def sp500_placebo_expanded(window=10):
 
             if abs(all_t) > 2:
                 print(
-                    f"  CRITICAL: All {all_n} albums show 'significant' S&P effect (t={all_t:.2f})"
+                    f"  NOTE: All {all_n} albums show 'significant' S&P effect (t={all_t:.2f})."
                 )
                 print(
-                    "  The absurd placebo is significant — methodology is unreliable!"
+                    "  The placebo is significant — methodology may be sensitive to noise."
                 )
 
     return results_df
@@ -616,28 +616,28 @@ def placebo_outcomes(accidents, window=10):
     return results_df
 
 
-def absurd_fars_placebos(accidents, window=10):
+def structural_fars_placebos(accidents, window=10):
     """
-    Absurd FARS Placebos (Green/Gelman).
+    Structural FARS Placebos (Green/Gelman).
 
     Test if album releases "predict" structural FARS variables that
-    CANNOT be caused by streaming:
-    - Mean crash latitude (geography shouldn't shift!)
+    should not be causally affected by streaming:
+    - Mean crash latitude (geography)
     - Mean crash longitude
     - Mean vehicles per crash
     - Mean persons per crash
 
-    If methodology finds effects here, it's fishing in noise.
+    If methodology finds effects here, it may be sensitive to noise.
 
-    Output: tabs/t28b_absurd_fars_placebos.csv
+    Output: tabs/t28b_structural_fars_placebos.csv
     """
     print(f"\n{'='*70}")
-    print("ABSURD FARS PLACEBOS (Green/Gelman)")
+    print("STRUCTURAL FARS PLACEBOS (Green/Gelman)")
     print(f"{'='*70}")
-    print("Testing 'effects' on variables that CANNOT be caused by albums:")
-    print("  - Mean crash latitude/longitude (geography doesn't shift!)")
+    print("Testing 'effects' on structural variables:")
+    print("  - Mean crash latitude/longitude (geography)")
     print("  - Mean vehicles/persons per crash (crash structure)")
-    print("If we find effects, methodology is fishing in noise.\n")
+    print("These variables should not be causally affected by streaming.\n")
 
     df = accidents.copy()
     cols = {c.upper(): c for c in df.columns}
@@ -812,18 +812,18 @@ def absurd_fars_placebos(accidents, window=10):
         )
 
     print("\nINTERPRETATION:")
-    significant_absurd = results_df[np.abs(results_df["t_stat"]) > 2]
-    if len(significant_absurd) > 0:
+    significant_structural = results_df[np.abs(results_df["t_stat"]) > 2]
+    if len(significant_structural) > 0:
         print(
-            f"  CRITICAL: {len(significant_absurd)} absurd placebo(s) show 'significant' effects!"
+            f"  NOTE: {len(significant_structural)} structural placebo(s) show 'significant' effects."
         )
-        for _, r in significant_absurd.iterrows():
+        for _, r in significant_structural.iterrows():
             print(f"    - {r['description']}: t = {r['t_stat']:.2f}")
-        print("  Albums don't change WHERE crashes happen or crash composition.")
-        print("  Methodology is fishing in noise — findings are unreliable!")
+        print("  These variables should not be causally affected by streaming.")
+        print("  This suggests the methodology may be sensitive to noise.")
     else:
         print(
-            "  No significant effects on absurd placebos. Methodology passes this check."
+            "  No significant effects on structural placebos. Methodology passes this check."
         )
 
     return results_df

@@ -37,7 +37,7 @@ from src.s06_specification import (build_daily_weather_controls,
                                    weather_controlled_model,
                                    window_sensitivity)
 # Phase 5: Falsification
-from src.s07_falsification import (absurd_fars_placebos,
+from src.s07_falsification import (structural_fars_placebos,
                                    best_fridays_false_positive_rate,
                                    placebo_outcomes, sp500_placebo,
                                    sp500_placebo_expanded,
@@ -480,9 +480,9 @@ def main():
     save_table(placebo_out, "tabs/t28_placebo_outcomes.md")
     print("Saved: tabs/t28_placebo_outcomes.md")
 
-    absurd_results = absurd_fars_placebos(accidents, window=args.window)
-    save_table(absurd_results, "tabs/t28b_absurd_fars_placebos.md")
-    print("Saved: tabs/t28b_absurd_fars_placebos.md")
+    structural_results = structural_fars_placebos(accidents, window=args.window)
+    save_table(structural_results, "tabs/t28b_structural_fars_placebos.md")
+    print("Saved: tabs/t28b_structural_fars_placebos.md")
 
     # ═══════════════════════════════════════════════════════════════════════
     # PHASE 6: CONFOUNDING SENSITIVITY
@@ -563,7 +563,7 @@ def main():
     if sens_results is not None:
         t_stat = sens_results["observed_effect"].iloc[0] / sens_results["se"].iloc[0]
         p_values["Main effect"] = 2 * (1 - scipy_stats.norm.cdf(abs(t_stat)))
-    for _, row in absurd_results.iterrows():
+    for _, row in structural_results.iterrows():
         p_val = 2 * (1 - scipy_stats.norm.cdf(abs(row["t_stat"])))
         p_values[f"Placebo: {row['description'][:20]}"] = p_val
     for _, row in placebo_out.iterrows():
