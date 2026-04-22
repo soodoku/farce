@@ -3,7 +3,7 @@ Falsification / Placebo Tests — tests that should show null effects.
 
 Functions for placebo and falsification tests:
 - Year permutation placebo (same dates, different years)
-- S&P 500 placebo (absurd outcome)
+- S&P 500 placebo (unrelated outcome)
 - Placebo outcomes (shouldn't be affected by streaming)
 - Structural FARS placebos (structural variables)
 - Best-Fridays false positive rate
@@ -106,7 +106,7 @@ def year_permutation_placebo(df_global, n_perms=1000, seed=42):
 
 def sp500_placebo(window=10):
     """
-    Test effect on S&P 500 returns — an absurd placebo.
+    Test effect on S&P 500 returns — an unrelated placebo.
 
     If album releases "cause" stock returns, the methodology is picking up noise
     from the small N of events, not a real streaming-driving effect.
@@ -669,38 +669,38 @@ def structural_fars_placebos(accidents, window=10):
     df = df.dropna(subset=["_date"])
     df["_date"] = pd.to_datetime(df["_date"])
 
-    absurd_vars = []
+    structural_vars = []
 
     if "LATITUDE" in cols:
         lat_col = cols["LATITUDE"]
         df["_lat"] = df[lat_col]
         df.loc[df["_lat"] > 90, "_lat"] = np.nan
         df.loc[df["_lat"] < -90, "_lat"] = np.nan
-        absurd_vars.append(("LATITUDE", "_lat", "Mean crash latitude"))
+        structural_vars.append(("LATITUDE", "_lat", "Mean crash latitude"))
 
     if "LONGITUD" in cols:
         lon_col = cols["LONGITUD"]
         df["_lon"] = df[lon_col]
         df.loc[df["_lon"] > 180, "_lon"] = np.nan
         df.loc[df["_lon"] < -180, "_lon"] = np.nan
-        absurd_vars.append(("LONGITUD", "_lon", "Mean crash longitude"))
+        structural_vars.append(("LONGITUD", "_lon", "Mean crash longitude"))
 
     if "VE_TOTAL" in cols:
         ve_col = cols["VE_TOTAL"]
         df["_ve"] = df[ve_col]
-        absurd_vars.append(("VE_TOTAL", "_ve", "Mean vehicles per crash"))
+        structural_vars.append(("VE_TOTAL", "_ve", "Mean vehicles per crash"))
 
     if "PERSONS" in cols:
         per_col = cols["PERSONS"]
         df["_persons"] = df[per_col]
-        absurd_vars.append(("PERSONS", "_persons", "Mean persons per crash"))
+        structural_vars.append(("PERSONS", "_persons", "Mean persons per crash"))
 
     if "RAIL" in cols:
         rail_col = cols["RAIL"]
         try:
             df["_rail"] = pd.to_numeric(df[rail_col], errors="coerce")
             df["_rail"] = (df["_rail"] >= 1).astype(float)
-            absurd_vars.append(("RAIL", "_rail", "% railroad crossing"))
+            structural_vars.append(("RAIL", "_rail", "% railroad crossing"))
         except Exception:
             pass
 
@@ -709,7 +709,7 @@ def structural_fars_placebos(accidents, window=10):
         try:
             df["_bus"] = pd.to_numeric(df[bus_col], errors="coerce")
             df["_bus"] = (df["_bus"] >= 1).astype(float)
-            absurd_vars.append(("SCH_BUS", "_bus", "% school bus involved"))
+            structural_vars.append(("SCH_BUS", "_bus", "% school bus involved"))
         except Exception:
             pass
 
@@ -718,7 +718,7 @@ def structural_fars_placebos(accidents, window=10):
         try:
             df["_wrk"] = pd.to_numeric(df[wrk_col], errors="coerce")
             df["_wrk"] = (df["_wrk"] >= 1).astype(float)
-            absurd_vars.append(("WRK_ZONE", "_wrk", "% work zone"))
+            structural_vars.append(("WRK_ZONE", "_wrk", "% work zone"))
         except Exception:
             pass
 
@@ -730,7 +730,7 @@ def structural_fars_placebos(accidents, window=10):
 
     results = []
 
-    for var_name, internal_col, description in absurd_vars:
+    for var_name, internal_col, description in structural_vars:
         daily = (
             df.groupby("_date")
             .agg(
@@ -798,7 +798,7 @@ def structural_fars_placebos(accidents, window=10):
         )
 
     if not results:
-        print("No absurd placebos could be computed (missing columns).")
+        print("No structural placebos could be computed (missing columns).")
         return None
 
     results_df = pd.DataFrame(results)
