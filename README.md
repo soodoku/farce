@@ -2,6 +2,8 @@
 
 A constructive replication of Patel, Worsham, Liu & Jena (2026), "[Smartphones, Online Music Streaming, and Traffic Fatalities](https://www.nber.org/papers/w34866)," NBER Working Paper 34866. [[Local PDF]](w34866.pdf)
 
+The detailed response is available as pdf [[here]](ms/ms.pdf)
+
 ## The Paper's Claims
 
 Patel et al. (2026) analyze 10 major album releases from 2017-2022 and report:
