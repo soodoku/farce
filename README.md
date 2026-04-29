@@ -2,7 +2,7 @@
 
 A constructive replication of Patel, Worsham, Liu & Jena (2026), "[Smartphones, Online Music Streaming, and Traffic Fatalities](https://www.nber.org/papers/w34866)," NBER Working Paper 34866. [[Local PDF]](w34866.pdf)
 
-The detailed response is available as pdf [[here]](ms/ms.pdf)
+The detailed response is available as [[pdf]](ms/ms.pdf).
 
 ## The Paper's Claims
 
