@@ -1,0 +1,15 @@
+\begin{table}
+\caption{Statistics a single large day cannot move: rank tests, a trimmed mean, and the estimate with the most influential album dropped.}
+\begin{tabular}{lrrl}
+\toprule
+statistic & value & p\_value & note \\
+\midrule
+mean & 16.1027 & 0.0140 & the headline estimator \\
+median & 12.9020 & 0.0044 & randomization p over 20,000 draws of 10 days \\
+20\% trimmed mean & 12.9611 & NaN & discards the two largest and two smallest \\
+positive count (9 of 10) & 9.0000 & 0.0215 & sign test, ignores magnitudes entirely \\
+signed-rank & NaN & 0.0039 & Wilcoxon, ignores magnitudes beyond their order \\
+mean without Her Loss & 11.5822 & 0.0056 & most influential album, delta +56.8 \\
+\bottomrule
+\end{tabular}
+\end{table}

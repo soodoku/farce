@@ -1,0 +1,14 @@
+\begin{table}
+\caption{Residual estimator with the additive day-of-week term replaced by the listed interaction. mean\_friday\_resid shows how little additive Friday signal the baseline leaves.}
+\begin{tabular}{lrrrrrr}
+\toprule
+model & n\_params & effect & se & t\_stat & p\_value & mean\_friday\_resid \\
+\midrule
+DOW + month + year (baseline) & 37 & 16.10 & 5.30 & 3.04 & 0.01 & 0.14 \\
+DOW x year & 139 & 15.95 & 5.37 & 2.97 & 0.02 & 0.13 \\
+DOW x month & 103 & 16.24 & 5.80 & 2.80 & 0.02 & 0.15 \\
+DOW x year + DOW x month & 211 & 16.16 & 5.88 & 2.75 & 0.02 & 0.14 \\
+DOW x week-of-year & 390 & 15.07 & 4.73 & 3.18 & 0.01 & 0.12 \\
+\bottomrule
+\end{tabular}
+\end{table}

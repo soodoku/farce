@@ -1,0 +1,12 @@
+\begin{table}
+\caption{Placebo distribution for the Tier 1 residual estimate (+16.1). Fridays drawn at random from days that are not release days.}
+\begin{tabular}{llrrrrrrl}
+\toprule
+scheme & pool & n\_sims & actual\_effect & null\_mean & null\_sd & null\_p95 & n\_draws\_ge\_actual & p\_value \\
+\midrule
+10 random Fridays & Fridays 2007-2024 & 10000 & 16.10 & -0.02 & 4.52 & 7.45 & 3 & 0.0003 \\
+10 random Fridays & Fridays 2017-2022 & 10000 & 16.10 & 0.77 & 4.88 & 8.82 & 8 & 0.0008 \\
+9 random Fridays + 1 random Sunday & Fridays/Sundays 2007-2024 & 10000 & 16.10 & -0.02 & 4.52 & 7.31 & 2 & 0.0002 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,14 @@
+\begin{table}
+\caption{Full-series regression on a release-day indicator with day-of-week, month, year and holiday fixed effects, plus the listed weather shares. Not the stacked album-day design, so the level differs from t12.}
+\begin{tabular}{lrrrrl}
+\toprule
+model & effect & se & t\_stat & pct\_effect & controls \\
+\midrule
+Base (DOW+Month+Year) & 15.83 & 4.38 & 3.62 & 15.61 & None \\
++Rain & 15.90 & 4.37 & 3.64 & 15.68 & pct\_rain \\
++Rain+Fog & 15.80 & 4.37 & 3.62 & 15.58 & pct\_rain, pct\_fog \\
++Rain+Fog+Cloudy & 15.64 & 4.36 & 3.59 & 15.42 & pct\_rain, pct\_fog, pct\_cloudy \\
++All bad weather & 15.95 & 4.37 & 3.65 & 15.73 & pct\_bad\_weather \\
+\bottomrule
+\end{tabular}
+\end{table}

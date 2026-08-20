@@ -1,0 +1,24 @@
+\begin{tabular}{lrrrrrr}
+\toprule
+test & p\_raw & p\_bonferroni & p\_bh & significant\_raw & significant\_bonf & significant\_bh \\
+\midrule
+RI (all days) & 0.00 & 0.01 & 0.00 & True & True & True \\
+RI (9 Fri + 1 Sun) & 0.00 & 0.00 & 0.00 & True & True & True \\
+RI (Fridays only) & 0.00 & 0.01 & 0.00 & True & True & True \\
+RI (block bootstrap) & 0.00 & 0.02 & 0.00 & True & True & True \\
+Studentized RI & 0.01 & 0.11 & 0.01 & True & False & True \\
+Clustered RI & 0.01 & 0.10 & 0.01 & True & False & True \\
+Main effect & 0.00 & 0.02 & 0.00 & True & True & True \\
+Placebo: Mean crash latitude & 0.00 & 0.06 & 0.01 & True & False & True \\
+Placebo: Mean crash longitude & 0.56 & 1.00 & 0.75 & False & False & False \\
+Placebo: Mean vehicles per cr & 0.97 & 1.00 & 1.00 & False & False & False \\
+Placebo: Mean persons per cra & 0.58 & 1.00 & 0.75 & False & False & False \\
+Placebo: \% railroad crossing & 0.05 & 0.88 & 0.10 & True & False & False \\
+Placebo: \% school bus involve & 0.70 & 1.00 & 0.84 & False & False & False \\
+Placebo: \% work zone & 0.09 & 1.00 & 0.16 & False & False & False \\
+Placebo: Weather-related only & 0.45 & 1.00 & 0.68 & False & False & False \\
+Placebo: Work zone crashes & 0.78 & 1.00 & 0.88 & False & False & False \\
+Placebo: School bus involved & NaN & NaN & NaN & False & False & False \\
+Placebo: National Highway Sys & 0.20 & 1.00 & 0.33 & False & False & False \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,24 @@
+**Excess over a day-of-week, seasonal and year baseline with holiday terms removed, so holidays are not absorbed by their own dummies. All nine federal holidays, two seasonal baselines.**
+
+| baseline       | day                |   n |   excess |   ci_lower |   ci_upper |
+|:---------------|:-------------------|----:|---------:|-----------:|-----------:|
+| dow+month+year | New Year's Day     |  18 |    36.99 |      31.05 |      42.92 |
+| dow+month+year | MLK Day            |  18 |     0.69 |      -4.85 |       6.24 |
+| dow+month+year | Presidents Day     |  18 |     1.45 |      -2.56 |       5.47 |
+| dow+month+year | Memorial Day       |  18 |    18.53 |      12.8  |      24.26 |
+| dow+month+year | July 4             |  18 |    26.29 |      20.62 |      31.97 |
+| dow+month+year | Labor Day          |  18 |    13.33 |       6.79 |      19.87 |
+| dow+month+year | Veterans Day       |  18 |     2.46 |      -4.76 |       9.68 |
+| dow+month+year | Thanksgiving       |  18 |     9.15 |       4.24 |      14.06 |
+| dow+month+year | Christmas Day      |  18 |   -13.47 |     -22.14 |      -4.79 |
+| dow+month+year | Album release days |  10 |    15.45 |       3.62 |      27.27 |
+| dow+woy+year   | New Year's Day     |  18 |    32.71 |      26.66 |      38.76 |
+| dow+woy+year   | MLK Day            |  18 |     2.21 |      -3.34 |       7.77 |
+| dow+woy+year   | Presidents Day     |  18 |     0.66 |      -3.3  |       4.61 |
+| dow+woy+year   | Memorial Day       |  18 |    16.37 |      10.64 |      22.09 |
+| dow+woy+year   | July 4             |  18 |    23.87 |      18.19 |      29.55 |
+| dow+woy+year   | Labor Day          |  18 |    14.13 |       7.61 |      20.65 |
+| dow+woy+year   | Veterans Day       |  18 |     2.24 |      -5.32 |       9.8  |
+| dow+woy+year   | Thanksgiving       |  18 |    12.07 |       7.34 |      16.8  |
+| dow+woy+year   | Christmas Day      |  18 |   -10.76 |     -19.79 |      -1.72 |
+| dow+woy+year   | Album release days |  10 |    15.35 |       4.87 |      25.83 |

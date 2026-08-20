@@ -1,0 +1,7 @@
+# Pinned to the versions the committed tables in tabs/ were produced with.
+pandas==2.3.3
+numpy==2.3.5
+scipy==1.16.3
+scikit-learn==1.8.0
+matplotlib==3.10.8
+requests==2.32.5

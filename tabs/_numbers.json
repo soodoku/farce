@@ -1,0 +1,677 @@
+{
+  "FridayMean": {
+    "value": 117.59424920127796,
+    "formatted": "117.6",
+    "note": "Mean fatalities on Fridays, 2017-2022"
+  },
+  "OverallMean": {
+    "value": 107.54039251483341,
+    "formatted": "107.5",
+    "note": "Mean fatalities on all days, 2017-2022"
+  },
+  "RDose": {
+    "value": -0.16942329446962978,
+    "formatted": "-0.17",
+    "note": "Pearson correlation of per-album effect with first-day streams, 20 albums"
+  },
+  "RDoseP": {
+    "value": 0.475174447790057,
+    "formatted": "0.48",
+    "note": ""
+  },
+  "RDoseLo": {
+    "value": -0.569264427531151,
+    "formatted": "-0.57",
+    "note": ""
+  },
+  "RDoseHi": {
+    "value": 0.29523201457822373,
+    "formatted": "0.30",
+    "note": ""
+  },
+  "RDoseMinDetectable": {
+    "value": 0.44376339933777365,
+    "formatted": "0.44",
+    "note": "Smallest correlation this many albums could call significant"
+  },
+  "RDoseTierOne": {
+    "value": -0.4957005205973347,
+    "formatted": "-0.50",
+    "note": "Tier 1 only, the ten albums whose stream counts are measured rather than estimated from chart position"
+  },
+  "RDoseTierOneP": {
+    "value": 0.1451152132664136,
+    "formatted": "0.15",
+    "note": ""
+  },
+  "RDoseMinDetectableTierOne": {
+    "value": 0.6318968647198338,
+    "formatted": "0.63",
+    "note": "Smallest correlation ten albums could call significant"
+  },
+  "PPreTrendDropWorst": {
+    "value": 0.7011,
+    "formatted": "0.70",
+    "note": "Joint pre-trend test with the largest single day removed"
+  },
+  "MedianEffect": {
+    "value": 12.902035815340902,
+    "formatted": "12.9",
+    "note": "Median of the ten release-day residuals"
+  },
+  "PMedian": {
+    "value": 0.00435,
+    "formatted": "0.0043",
+    "note": ""
+  },
+  "TrimmedEffect": {
+    "value": 12.961087617931172,
+    "formatted": "13.0",
+    "note": ""
+  },
+  "NPositiveTierOne": {
+    "value": 9.0,
+    "formatted": "9",
+    "note": ""
+  },
+  "PSignTest": {
+    "value": 0.021484375,
+    "formatted": "0.021",
+    "note": ""
+  },
+  "PWilcoxon": {
+    "value": 0.00390625,
+    "formatted": "0.0039",
+    "note": ""
+  },
+  "EffectDropMostInfluential": {
+    "value": 11.582187084400461,
+    "formatted": "11.6",
+    "note": "Estimate with the single most influential album removed"
+  },
+  "PDropMostInfluential": {
+    "value": 0.005613691035956103,
+    "formatted": "0.006",
+    "note": ""
+  },
+  "EffectNoWeather": {
+    "value": 14.033314094914624,
+    "formatted": "14.03",
+    "note": "Release-day effect on the weather sample, no weather control"
+  },
+  "EffectWeatherControlled": {
+    "value": 14.237402459929797,
+    "formatted": "14.24",
+    "note": "The same with fatality-weighted station precipitation added"
+  },
+  "WeatherSpread": {
+    "value": 0.5054473348889506,
+    "formatted": "0.51",
+    "note": ""
+  },
+  "EffectNoStream": {
+    "value": 15.41538733714636,
+    "formatted": "15.42",
+    "note": "Release-day effect on the streaming sample, no control"
+  },
+  "EffectBackgroundStream": {
+    "value": 15.401338007324735,
+    "formatted": "15.40",
+    "note": "The same with ambient listening controlled"
+  },
+  "BgStreamCoef": {
+    "value": -0.00737374840203641,
+    "formatted": "-0.0074",
+    "note": "Deaths per million ambient streams, release windows excluded"
+  },
+  "BgStreamSE": {
+    "value": 0.02660574214495229,
+    "formatted": "0.0266",
+    "note": ""
+  },
+  "BgStreamSD": {
+    "value": 18.779327123519547,
+    "formatted": "18.8",
+    "note": "SD of daily ambient streaming, millions"
+  },
+  "BgStreamSDMove": {
+    "value": -0.13847403336837127,
+    "formatted": "-0.14",
+    "note": ""
+  },
+  "StreamControlMean": {
+    "value": 86.765887135,
+    "formatted": "86.8",
+    "note": "Mean US top-200 streams on the days surrounding the ten releases, the paper's own estimand, millions"
+  },
+  "StreamControlLo": {
+    "value": 84.72861944040042,
+    "formatted": "84.7",
+    "note": ""
+  },
+  "StreamControlHi": {
+    "value": 88.80315482959958,
+    "formatted": "88.8",
+    "note": ""
+  },
+  "PaperStreamControlMean": {
+    "value": 86.1,
+    "formatted": "86.1",
+    "note": "The same quantity as reported in the original paper"
+  },
+  "StreamReleaseMean": {
+    "value": 133.1563752,
+    "formatted": "133.2",
+    "note": "Mean US top-200 streams on the ten release days, millions"
+  },
+  "PaperStreamReleaseMean": {
+    "value": 123.3,
+    "formatted": "123.3",
+    "note": "The same quantity as reported in the original paper"
+  },
+  "EffectFrameTen": {
+    "value": 13.242297418898108,
+    "formatted": "13.24",
+    "note": "Top ten albums by measured first-day US streams"
+  },
+  "EffectFrameFifty": {
+    "value": 4.313154245971885,
+    "formatted": "4.31",
+    "note": "Top fifty on the same frame"
+  },
+  "MeasuredMidnights": {
+    "value": 79.608294,
+    "formatted": "79.6",
+    "note": "Measured US first-day streams for Midnights, millions"
+  },
+  "PaperMidnights": {
+    "value": 184.7,
+    "formatted": "184.7",
+    "note": "First-day streams for Midnights as reported in Table 1 of the original paper, millions"
+  },
+  "MeasuredUnVerano": {
+    "value": 32.095694,
+    "formatted": "32.1",
+    "note": "Measured US first-day streams for Un Verano Sin Ti, millions"
+  },
+  "PaperUnVerano": {
+    "value": 145.8,
+    "formatted": "145.8",
+    "note": "First-day streams for Un Verano Sin Ti as reported in Table 1 of the original paper, millions"
+  },
+  "NDoseAll": {
+    "value": 524.0,
+    "formatted": "524",
+    "note": "Albums with a measured dose and a fatality residual"
+  },
+  "RDoseAll": {
+    "value": 0.06809413350102601,
+    "formatted": "0.068",
+    "note": "Correlation of per-album effect with measured first-day US streams, every charting album"
+  },
+  "RDoseAllP": {
+    "value": 0.11951063665030592,
+    "formatted": "0.120",
+    "note": ""
+  },
+  "RDoseAllMin": {
+    "value": 0.08566855208990543,
+    "formatted": "0.086",
+    "note": ""
+  },
+  "DoseSlope": {
+    "value": 0.09267473109161212,
+    "formatted": "0.0927",
+    "note": "Deaths per million first-day streams"
+  },
+  "DoseTopDecile": {
+    "value": 4.537812323534438,
+    "formatted": "4.54",
+    "note": ""
+  },
+  "DoseCut": {
+    "value": 32.095694,
+    "formatted": "32.1",
+    "note": "Measured first-day US streams of the smallest of the paper's ten albums, millions"
+  },
+  "NDoseMatched": {
+    "value": 17.0,
+    "formatted": "17",
+    "note": "Albums other than the paper's that reach that dose"
+  },
+  "EffectDoseMatched": {
+    "value": -0.4927358118960374,
+    "formatted": "-0.49",
+    "note": "Release-day excess for those albums"
+  },
+  "EffectDoseMatchedSE": {
+    "value": 2.5388840097820213,
+    "formatted": "2.54",
+    "note": ""
+  },
+  "EffectDoseMatchedLo": {
+    "value": -5.874929478340434,
+    "formatted": "-5.87",
+    "note": ""
+  },
+  "EffectDoseMatchedHi": {
+    "value": 4.889457854548359,
+    "formatted": "4.89",
+    "note": ""
+  },
+  "EffectDoseMatchedWindow": {
+    "value": -1.24111778649478,
+    "formatted": "-1.24",
+    "note": "The same, restricted to the paper's own years"
+  },
+  "EffectDoseMatchedWindowSE": {
+    "value": 2.0365054224864294,
+    "formatted": "2.04",
+    "note": ""
+  },
+  "NDoseMatchedWindow": {
+    "value": 9.0,
+    "formatted": "9",
+    "note": ""
+  },
+  "EffectBelowDoseCut": {
+    "value": 0.7294687326004718,
+    "formatted": "0.73",
+    "note": "Release-day excess for albums below that dose"
+  },
+  "EffectBelowDoseCutSE": {
+    "value": 0.6828310536472701,
+    "formatted": "0.68",
+    "note": ""
+  },
+  "NBelowDoseCut": {
+    "value": 497.0,
+    "formatted": "497",
+    "note": ""
+  },
+  "EffectDowInteractMin": {
+    "value": 15.07158755750807,
+    "formatted": "15.07",
+    "note": "Smallest estimate across day-of-week interaction models"
+  },
+  "EffectDowInteractMax": {
+    "value": 16.239311713069803,
+    "formatted": "16.2",
+    "note": ""
+  },
+  "PDowInteractMin": {
+    "value": 0.011113475743289136,
+    "formatted": "0.011",
+    "note": ""
+  },
+  "PDowInteractMax": {
+    "value": 0.0224906401476217,
+    "formatted": "0.022",
+    "note": ""
+  },
+  "EffectResidual": {
+    "value": 16.102749190642605,
+    "formatted": "16.1",
+    "note": "Tier 1 mean donut residual, the estimate the placebos are compared with"
+  },
+  "FridayPlaceboMean": {
+    "value": -0.019661534584513987,
+    "formatted": "-0.02",
+    "note": ""
+  },
+  "FridayPlaceboDraws": {
+    "value": 3.0,
+    "formatted": "3",
+    "note": "Draws of ten random Fridays reaching the observed effect, of 10,000"
+  },
+  "EffectCalendarPlacebo": {
+    "value": -0.0848953739274287,
+    "formatted": "-0.08",
+    "note": "Same calendar positions in other years, clustered by album"
+  },
+  "SECalendarPlacebo": {
+    "value": 1.4809326071205504,
+    "formatted": "1.48",
+    "note": ""
+  },
+  "NCalendarPlacebo": {
+    "value": 168.0,
+    "formatted": "168",
+    "note": ""
+  },
+  "ContrastWithDow": {
+    "value": 15.868698126858963,
+    "formatted": "15.9",
+    "note": "Release days minus the Friday mean, weekday dummies in the model"
+  },
+  "ContrastNoDow": {
+    "value": 16.163840502534086,
+    "formatted": "16.2",
+    "note": "The same contrast with the weekday dummies removed"
+  },
+  "FridayResidNoDow": {
+    "value": 9.253827590986923,
+    "formatted": "9.25",
+    "note": ""
+  },
+  "ObservedNoDow": {
+    "value": 25.41766809352101,
+    "formatted": "25.4",
+    "note": ""
+  },
+  "PPlaceboNoDow": {
+    "value": 0.0001,
+    "formatted": "0.0001",
+    "note": "Friday placebo p-value with the weekday dummies removed"
+  },
+  "EffectAdjacentFriday": {
+    "value": 14.11111111111111,
+    "formatted": "14.1",
+    "note": "Release Friday against the same album's neighbouring Fridays"
+  },
+  "RatioAdjacentFriday": {
+    "value": 1.1160601433205002,
+    "formatted": "1.12",
+    "note": ""
+  },
+  "CIAdjacentFridayLo": {
+    "value": -2.383970285414513,
+    "formatted": "-2.4",
+    "note": ""
+  },
+  "CIAdjacentFridayHi": {
+    "value": 30.606192507636734,
+    "formatted": "30.6",
+    "note": ""
+  },
+  "PAdjacentFriday": {
+    "value": 0.08398869529727837,
+    "formatted": "0.084",
+    "note": ""
+  },
+  "SEAdjacentFriday": {
+    "value": 7.1531013950524445,
+    "formatted": "7.15",
+    "note": ""
+  },
+  "LatShiftHerLoss": {
+    "value": 0.029312162436966105,
+    "formatted": "0.029",
+    "note": "Latitude shift on the album with the largest excess"
+  },
+  "ExcessHerLoss": {
+    "value": 56.7878081468219,
+    "formatted": "56.8",
+    "note": ""
+  },
+  "RLatitudeExcess": {
+    "value": -0.22927566023208956,
+    "formatted": "-0.23",
+    "note": "Correlation between an album's excess deaths and its latitude shift"
+  },
+  "PLatitudeExcess": {
+    "value": 0.5240029941211797,
+    "formatted": "0.52",
+    "note": ""
+  },
+  "EffectLatitude": {
+    "value": 0.3721200320922847,
+    "formatted": "0.37",
+    "note": "Mean crash latitude on release days, degrees"
+  },
+  "TLatitude": {
+    "value": 2.9144962256336084,
+    "formatted": "2.91",
+    "note": ""
+  },
+  "ResidSD": {
+    "value": 13.693482653000872,
+    "formatted": "13.7",
+    "note": "SD of daily fatalities after the fixed effects"
+  },
+  "SENull": {
+    "value": 4.330259428348789,
+    "formatted": "4.33",
+    "note": "Null SE of a ten-day mean"
+  },
+  "SERealized": {
+    "value": 5.297322714825621,
+    "formatted": "5.30",
+    "note": "SE across the ten release-day residuals"
+  },
+  "MDEEightyClustered": {
+    "value": 23.123149053381248,
+    "formatted": "23.1",
+    "note": "MDE using the paper's own clustered standard error"
+  },
+  "MDEEighty": {
+    "value": 13.44016566463336,
+    "formatted": "13.4",
+    "note": "Smallest effect detected 80% of the time, t(9) critical value"
+  },
+  "MDEFifty": {
+    "value": 9.79572738285571,
+    "formatted": "9.8",
+    "note": ""
+  },
+  "PowerAtFive": {
+    "value": 0.17828,
+    "formatted": "0.18",
+    "note": ""
+  },
+  "ExaggerationAtFive": {
+    "value": 2.120583850073781,
+    "formatted": "2.1",
+    "note": ""
+  },
+  "EffectBenchmark": {
+    "value": 15.447589676506794,
+    "formatted": "15.4",
+    "note": "Release-day excess on the holiday-comparable baseline"
+  },
+  "ExcessMemorialDay": {
+    "value": 18.53078035124446,
+    "formatted": "18.5",
+    "note": ""
+  },
+  "EffectHolAdjMin": {
+    "value": 15.374761439959485,
+    "formatted": "15.4",
+    "note": "Smallest estimate across holiday-window variants"
+  },
+  "EffectHolAdjMax": {
+    "value": 15.941884461578866,
+    "formatted": "15.9",
+    "note": ""
+  },
+  "EffectDropHolAdj": {
+    "value": 15.562648329210036,
+    "formatted": "15.6",
+    "note": "Dropping the two holiday-adjacent releases"
+  },
+  "NDropHolAdj": {
+    "value": 8.0,
+    "formatted": "8",
+    "note": ""
+  },
+  "EffectDayPlusOne": {
+    "value": 8.792437510601022,
+    "formatted": "8.8",
+    "note": "Event-study coefficient on the day after release"
+  },
+  "TDayPlusOne": {
+    "value": 1.9448997223222075,
+    "formatted": "1.94",
+    "note": ""
+  },
+  "EffectDayMinusSix": {
+    "value": 16.511586866489118,
+    "formatted": "16.5",
+    "note": "The Saturday before release for nine of the ten albums"
+  },
+  "EffectDayMinusSeven": {
+    "value": 3.843741345858882,
+    "formatted": "3.8",
+    "note": "The previous Friday, the same weekday as release"
+  },
+  "EffectNoAlcohol": {
+    "value": 13.06685802606999,
+    "formatted": "13.07",
+    "note": "Release-day excess in crashes with no driver at BAC 0.08 or above"
+  },
+  "SENoAlcohol": {
+    "value": 4.3096485755119165,
+    "formatted": "4.31",
+    "note": ""
+  },
+  "PNoAlcohol": {
+    "value": 0.0025138797743253782,
+    "formatted": "0.003",
+    "note": ""
+  },
+  "EffectAlcohol": {
+    "value": 3.0358911645727598,
+    "formatted": "3.04",
+    "note": "The same for crashes with a driver at or above the limit"
+  },
+  "SEAlcohol": {
+    "value": 2.578515934183087,
+    "formatted": "2.58",
+    "note": ""
+  },
+  "PAlcohol": {
+    "value": 0.24197970868522822,
+    "formatted": "0.242",
+    "note": ""
+  },
+  "EffectOutsidePaper": {
+    "value": 6.489368951874687,
+    "formatted": "6.5",
+    "note": "Pooled effect over the 27 albums that are not the paper's ten"
+  },
+  "CIOutsideLo": {
+    "value": -0.15509108923564163,
+    "formatted": "-0.2",
+    "note": ""
+  },
+  "CIOutsideHi": {
+    "value": 13.133828992985016,
+    "formatted": "13.1",
+    "note": ""
+  },
+  "POutsidePaper": {
+    "value": 0.44206833839416504,
+    "formatted": "0.44",
+    "note": "Sign test over those 27"
+  },
+  "NOutsidePaper": {
+    "value": 27.0,
+    "formatted": "27",
+    "note": ""
+  },
+  "NPositiveOutside": {
+    "value": 16.0,
+    "formatted": "16",
+    "note": ""
+  },
+  "SelectionDiff": {
+    "value": 3.047830317969673,
+    "formatted": "3.0",
+    "note": "Top ten by first-day streams minus the next ten. Tests whether being selected on maximum streaming predicts a larger effect."
+  },
+  "SelectionDiffSE": {
+    "value": 8.461050506602442,
+    "formatted": "8.5",
+    "note": ""
+  },
+  "EffectAllAlbums": {
+    "value": 9.087579827217366,
+    "formatted": "9.1",
+    "note": "All 37 albums, residual estimator"
+  },
+  "CIAllAlbumsLo": {
+    "value": 3.383899763027049,
+    "formatted": "3.4",
+    "note": ""
+  },
+  "CIAllAlbumsHi": {
+    "value": 14.791259891407684,
+    "formatted": "14.8",
+    "note": ""
+  },
+  "NAllAlbums": {
+    "value": 37.0,
+    "formatted": "37",
+    "note": ""
+  },
+  "MeanPublishedAtOutside": {
+    "value": 17.577454799286834,
+    "formatted": "17.6",
+    "note": "What a ten-album study would report if the truth were the outside-sample pooled effect and the SE were the paper's"
+  },
+  "PowerAtOutside": {
+    "value": 0.1230475,
+    "formatted": "0.12",
+    "note": ""
+  },
+  "PReachReplicated": {
+    "value": 0.4640078018651334,
+    "formatted": "0.46",
+    "note": ""
+  },
+  "EffectRegression": {
+    "value": 17.61242092151765,
+    "formatted": "17.6",
+    "note": "Paper spec on stacked album-days, CR1 clustered by album"
+  },
+  "SEClustered": {
+    "value": 7.449645115860281,
+    "formatted": "7.45",
+    "note": ""
+  },
+  "CIRegressionLo": {
+    "value": 0.7601528619532623,
+    "formatted": "0.8",
+    "note": "t with 9 df, since treatment varies across 10 clusters"
+  },
+  "CIRegressionHi": {
+    "value": 34.464688981082034,
+    "formatted": "34.5",
+    "note": ""
+  },
+  "PRegression": {
+    "value": 0.042309471012121014,
+    "formatted": "0.042",
+    "note": ""
+  },
+  "PctRegression": {
+    "value": 14.44529089318651,
+    "formatted": "14.4",
+    "note": ""
+  },
+  "ControlMean": {
+    "value": 121.925,
+    "formatted": "121.9",
+    "note": "Mean of the control days, the analogue of the paper's 120.9"
+  },
+  "EffectOutOfSample": {
+    "value": -7.981643991307173,
+    "formatted": "-7.98",
+    "note": "Tier 3, paper spec"
+  },
+  "SEOutOfSample": {
+    "value": 7.559278856542592,
+    "formatted": "7.56",
+    "note": ""
+  },
+  "EffectOutOfSampleLocal": {
+    "value": 5.6000000000000005,
+    "formatted": "5.6",
+    "note": "Tier 3 by the raw release-day-minus-window comparison, the unadjusted analogue of the paper's 139.1 against 120.9"
+  },
+  "DiffFromPaper": {
+    "value": 0.5875790784823494,
+    "formatted": "0.6",
+    "note": "Gap between the paper's 18.2 and our replication"
+  }
+}

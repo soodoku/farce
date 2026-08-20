@@ -32,5 +32,18 @@ env/
 Thumbs.db
 
 # Output artifacts (regenerable)
-figs/*.png
-tabs/*.csv
+# figs/*.png  # Now tracked in git
+.Rhistory
+
+# LaTeX build artifacts
+ms/*.aux
+ms/*.log
+ms/*.out
+ms/*.bbl
+ms/*.blg
+ms/*.fls
+ms/*.fdb_latexmk
+ms/*.synctex.gz
+
+# Spotify Charts pull (160 MB raw, rest derived from it)
+data/spotify/*.csv

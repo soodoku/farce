@@ -1,0 +1,11 @@
+**Residual estimator. Two Tier 1 releases sit within three days of a federal holiday. Widening the holiday control and dropping both albums leave the estimate essentially unchanged.**
+
+| variant                        |   n_albums |   effect |   se |   ci_lower |   ci_upper |   p_value |   n_days_flagged |
+|:-------------------------------|-----------:|---------:|-----:|-----------:|-----------:|----------:|-----------------:|
+| holiday control +/-0d          |         10 |    15.81 | 4.74 |       5.1  |      26.53 |      0.01 |              162 |
+| holiday control +/-1d          |         10 |    15.37 | 4.62 |       4.93 |      25.82 |      0.01 |              485 |
+| holiday control +/-2d          |         10 |    15.54 | 4.64 |       5.05 |      26.04 |      0.01 |              808 |
+| holiday control +/-3d          |         10 |    15.57 | 4.73 |       4.87 |      26.26 |      0.01 |             1131 |
+| holiday control +/-5d          |         10 |    15.68 | 4.74 |       4.95 |      26.41 |      0.01 |             1709 |
+| holiday control +/-7d          |         10 |    15.94 | 4.74 |       5.22 |      26.66 |      0.01 |             2257 |
+| drop holiday-adjacent releases |          8 |    15.56 | 5.76 |       1.93 |      29.19 |      0.03 |              nan |
