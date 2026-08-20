@@ -1,4 +1,4 @@
-.PHONY: all extract run run-placebos clean
+.PHONY: all extract run run-forecast lint clean
 
 all: extract run
 
@@ -18,13 +18,28 @@ extract:
 	@echo "Extraction complete. Files in data/fars/:"
 	@ls data/fars/*.csv 2>/dev/null | wc -l | xargs echo "  "
 
-# Run standard analysis
+# Run analysis (includes placebo tests)
 run: extract
-	python3 -m src.pipeline --local data/fars/
+	python3 -m src.pipeline
 
-# Run with placebo tests
-run-placebos: extract
-	python3 -m src.pipeline --local data/fars/ --run-placebos
+# Run forecast-based estimator
+run-forecast: extract
+	python3 -c "from src.s01_load import load_local_fars; \
+	from src.s02_preprocess import build_daily_series; \
+	from src.s04_estimate import residualize; \
+	from src.s06_specification import forecast_estimate, print_forecast_results, save_forecast_tables; \
+	r = forecast_estimate(residualize(build_daily_series(load_local_fars('data/fars/')))); \
+	print_forecast_results(r); save_forecast_tables(r)"
+
+# Linting
+lint:
+	black --check src
+	isort --check-only src
+	flake8 src
+
+format:
+	black src
+	isort src
 
 # Clean extracted CSVs (keeps raw zips)
 clean:

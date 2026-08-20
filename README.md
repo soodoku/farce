@@ -1,191 +1,303 @@
 # FARCE: FARS Album Release Coincidence Examination
 
-A replication and extended analysis of Patel, Worsham, Liu & Jena (2026), "Smartphones, Online Music Streaming, and Traffic Fatalities," NBER Working Paper 34866.
+A constructive replication of Patel, Worsham, Liu & Jena (2026), "[Smartphones, Online Music Streaming, and Traffic Fatalities](https://www.nber.org/papers/w34866)," NBER Working Paper 34866. [[Local PDF]](w34866.pdf)
 
-## What We Find
+> **Status.** A correctness audit of this repository (see [AUDIT.md](AUDIT.md)) found that
+> several of the original critique's central claims rested on defective code. They have been
+> corrected here. **The manuscript in [`ms/`](ms/) predates those corrections and should not be
+> circulated** — see [ms/README.md](ms/README.md) for the specific claims that no longer hold.
 
-**The basic pattern is real**: Traffic fatalities are elevated on the release days of major streaming albums. Using FARS data from 2007-2024, we estimate an average excess of **+16.1 deaths** on the 10 release days (donut-global estimator, SE=5.0). This is statistically significant under multiple testing strategies.
+## The Paper's Claims
 
-**But the causal interpretation is questionable**: Several findings undermine the claim that streaming-induced distraction causes the excess deaths:
+Patel et al. (2026) analyze 10 major album releases from 2018-2022 (selected as the most-streamed
+single-day releases in a 2017-2022 window) and report:
 
-1. **No dose-response**: Albums with more streams show *smaller* effects (r = -0.22)
-2. **Single outlier dominance**: Her Loss accounts for 34% of the total effect
-3. **Tier 2 inconsistency**: Albums 11-20 show 80% of Tier 1's effect despite having ~60% of streams
+- **139.1 deaths** on album release days vs **120.9** on control days (+18.2 deaths, +15.1%)
+- 123.3M streams on release days vs 86.1M control (+43%)
+- Proposed mechanism: smartphone distraction from streaming while driving
 
-## What The Authors Claim
+> "We find an additional 18.2 traffic fatalities (139.1 versus 120.9; p < 0.01) on album release days compared to control days..." — Patel et al. (2026), Figure 2B
 
-Patel et al. analyze whether major album releases on Spotify lead to increased traffic fatalities, hypothesizing that streaming music while driving causes distraction. Using FARS data from 2017-2022, they compare fatalities on release days of the 10 most-streamed albums to a ±10 day control window.
+## Replication
 
-**Key claims:**
-- Streaming surge: 123.3M streams on release days vs 86.1M on ±10 day window (43% increase)
-- Fatality increase: 139.1 deaths on release days vs 120.9 on control days (+18.2 deaths, +15.1%)
-- Mechanism: Smartphone distraction from streaming music while driving
-- Supporting evidence: Effects larger for younger drivers, single-occupant vehicles, sober drivers
+**We closely replicate the paper's main result:**
 
-## What We Did
+| Source | Effect | SE | % Effect |
+|--------|--------|-----|----------|
+| Paper (Figure 2B) | +18.2 deaths | ~5.5 | +15.1% |
+| Our replication | +17.6 deaths | 7.45 | +14.4% |
 
-We replicate and extend the analysis:
+- **Difference: 0.6 deaths** (well within one standard error)
+- Same specification: day-of-week, week-of-year, year, and federal-holiday fixed effects, ±10 day window
+- Same ten albums and dates as the paper's Table 1 (asserted by `check_album_list` in [src/gates.py](src/gates.py))
+- Our SE clusters by album. With **10 clusters** the honest interval is a t₉ one: **95% CI [0.8, 34.5], p = 0.042**
+- The percentage uses the control-day mean (121.9), matching the paper's 120.9 denominator. The raw release-day mean is 144.9
 
-1. **Expanded data**: FARS 2007-2024 (vs. 2017-2022), providing better fixed effect estimates
-2. **Global counterfactual**: Compared ±10 day window to a global model prediction
-3. **Placebo tests**: Pre-trends, window sensitivity, year permutation
-4. **Dose-response analysis**: Correlated streaming intensity with fatality effects
-5. **Tier 2 comparison**: Tested whether albums 11-20 show proportionally smaller effects
+The statistical effect replicates. The question is how to interpret it. See [t12_paper_replication.md](tabs/t12_paper_replication.md).
 
-### Why These Extensions Matter
+## What Holds Up
 
-- **Global counterfactual**: The ±10 day window may be unrepresentative of "normal" days
-- **Placebo tests**: If effects appear before release or on wrong-year dates, causation is doubtful
-- **Dose-response**: A causal mechanism should show more streams → more deaths
-- **Heterogeneity**: Averaging conceals whether the effect is consistent or driven by outliers
+### Robustness across specifications
 
-## Detailed Results
+35 estimates from 7 distinct album-set × sample-period configurations × 5 window widths (±5 to ±21 days).
 
-### The Effect Is Real (Statistically)
+![Specification Curve](figs/multiverse.png)
 
-| Estimator | Pooled δ | SE | t-stat |
-|-----------|----------|-----|--------|
-| Local (paper's ±10 day) | +23.0 deaths | 5.1 | 4.5 |
-| Donut-global | +16.1 deaths | 5.0 | 3.2 |
+| Specification | Range |
+|---------------|-------|
+| Effect estimates | +4.4 to +16.2 deaths |
+| Significant (p < 0.05) | **30 of 35** |
+| All specifications | Same direction |
 
-Randomization inference p-values:
-- iid (10 random days): p = 0.0003
-- 9 Fridays + 1 Sunday: p = 0.0001
-- Block bootstrap (7-day blocks): p = 0.0009
+The five nulls are the same configuration (pre-2018 albums) at five window widths. Read as
+distinct configurations rather than as 35 independent tests: **6 of 7 are significant, and the
+only null is the pre-2018 sample.** Widening the window from ±5 to ±21 moves the Tier 1 estimate
+by less than two deaths, so the count of 35 is mostly the same answer five times over.
+See [t29_multiverse.md](tabs/t29_multiverse.md).
 
-The block bootstrap p-value is 3× larger than iid, suggesting some autocorrelation.
+### The effect is concentrated on day 0
 
-### Placebo Tests Pass
+![Event Study](figs/event_study.png)
 
-| Test | Result | Interpretation |
-|------|--------|----------------|
-| Pre-trends (days -5 to -1) | Avg -0.8 deaths | No anticipation effects |
-| Window sensitivity | Shrinkage < 1% | Effect stable across window sizes |
-| Year permutation | p < 0.0001 | Effect is year-specific |
+| Day | Weekday (9/10 albums) | Effect | 95% CI |
+|-----|------|--------|--------|
+| −7 | **Friday** | +3.8 | [−5.6, +13.3] |
+| −6 | Saturday | +16.5 | [+5.4, +27.6] |
+| −1 | Thursday | +1.5 | [−5.7, +8.7] |
+| **0** | **Friday** | **+16.1** | **[+4.1, +28.1]** |
+| +1 | Saturday | +8.8 | [−1.4, +19.0] |
+| +7 | **Friday** | −0.3 | [−11.7, +11.0] |
 
-These placebo tests support the claim that *something* happens on release days. They do not establish *why*.
+Day 0 is the largest coefficient and is significant (t = 3.04). Day +1 is **not** (t = 1.94,
+p = 0.08) — an earlier version reported t = 2.05 using a normal critical value and a
+ddof = 0 standard error. See [t13_dynamic_effects.md](tabs/t13_dynamic_effects.md).
 
-### But No Dose-Response
+### Weather does not explain it
 
-If distraction from streaming causes fatalities, more streams should mean more deaths:
+| Model | Effect | SE |
+|-------|--------|-----|
+| Base (DOW+Month+Year) | +15.83 | 4.38 |
+| +Rain+Fog+Cloudy | +15.64 | 4.36 |
+| +All bad weather | +15.95 | 4.37 |
 
-| Album | Streams (M) | δ (deaths) |
-|-------|-------------|------------|
-| Midnights | 185 | -1.8 |
-| Certified Lover Boy | 153 | +11.0 |
-| Her Loss | 75 | +57.2 |
+See [t21_fars_controls.md](tabs/t21_fars_controls.md).
 
-- **Pearson r = -0.22** (negative correlation, opposite of prediction)
-- Regression: β₁(log-streams) = -10.5 (SE=10.8)
-- Her Loss (lowest Tier 1 streams) shows largest effect
-- Midnights (highest streams) shows negative effect
+### Friday releases are an industry convention, not a researcher choice
 
-### Extreme Heterogeneity
+Since 2015, Friday has been the global standard release day for new music ("New Music Friday"),
+established by the IFPI. All nine Friday releases in the study follow that norm.
 
-Individual effects range from +3.3 to +59.5 deaths (local):
+## The Friday Question, Answered
 
-| Album | δ_local | δ_global |
-|-------|---------|----------|
-| Her Loss | +59.5 | +56.8 |
-| Red (Taylor's Version) | +33.2 | +25.3 |
-| Scorpion | +30.5 | +16.1 |
-| Midnights | +3.3 | -2.1 |
+Nine of the ten releases are Fridays, and Fridays are high-fatality days in raw counts
+(2017-2022: Friday mean 117.6 vs 107.5 overall). Does the release-day estimate just recover a
+Friday effect?
 
-Leave-one-out analysis:
-- Dropping Her Loss: pooled estimate falls from +23.0 to +18.9
-- Her Loss accounts for 34% of total Tier 1 effect
-- Jackknife SE = 5.1, 95% CI: [+12.9, +33.0]
+**No.** After the paper's fixed effects there is essentially no Friday contrast left to recover:
+the mean residual on Fridays is **+0.14 deaths**. Drawing ten Fridays at random and running them
+through the same estimator:
 
-### Tier 2 Inconsistent with Mechanism
+| Scheme | Null mean | Null SD | Null p95 | Draws ≥ +16.1 | p |
+|--------|-----------|---------|----------|---------------|---|
+| 10 random Fridays (2007-2024) | −0.02 | 4.52 | +7.5 | 3 / 10,000 | **0.0003** |
+| 10 random Fridays (2017-2022) | +0.77 | 4.88 | +8.8 | 8 / 10,000 | **0.0008** |
+| 9 random Fridays + 1 random Sunday | −0.02 | 4.52 | +7.3 | 2 / 10,000 | **0.0002** |
 
-If effects are proportional to streaming intensity, albums 11-20 (~60% of Tier 1 streams) should show ~50% of Tier 1's effect:
+Observed effect: +16.1, roughly three and a half null standard deviations out.
+See [t18_friday_placebo.md](tabs/t18_friday_placebo.md). This agrees with the paper's own
+falsification test (20 of 1,000 random-Friday iterations exceeded their estimate) and with the
+randomization inference in [t05_randomization_inference.md](tabs/t05_randomization_inference.md).
 
-| Tier | Avg δ | Streams (relative) | Expected δ |
-|------|-------|-------------------|------------|
-| Tier 1 (top 10) | +16.7 | 100% | — |
-| Tier 2 (11-20) | +13.4 | ~60% | ~+8.4 |
+> **Correction.** Earlier versions of this repository reported a "100% false positive rate" from
+> random Fridays. That simulation drew 100 Fridays and kept the **ten largest residuals**. It
+> measures how much an analyst could manufacture by choosing dates, not whether Fridays are
+> confounded — the same procedure on Tuesdays gives 99%. It is kept, correctly labeled, in
+> [t18b_cherry_pick_benchmark.md](tabs/t18b_cherry_pick_benchmark.md).
 
-Actual Tier2/Tier1 ratio: **0.80** (expected: ~0.50)
+The day −6 spike is likewise not a Friday artifact: **day −6 is the Saturday before release**;
+the previous Friday is day −7, and it is flat (+3.8, p = 0.38). The joint test that pre-treatment
+days are flat, using album-level sign flips that respect the fact that the same ten albums
+generate every coefficient, gives **p = 0.19** — and **p = 0.70** with day −6 removed.
+See [t32_parallel_trends.md](tabs/t32_parallel_trends.md).
 
-## Interpretation
+Day-of-week imbalance is nonetheless extreme and worth stating plainly: 90% of release days are
+Fridays versus 12% of control days (Fisher exact p < 0.001). What the placebo shows is that the
+paper's fixed effects absorb it. See [t24_balance_check.md](tabs/t24_balance_check.md).
 
-**What the data support:**
-- Elevated fatalities on major album release days (robust to placebo tests)
-- Effect is year-specific (not a calendar artifact)
-- No pre-release anticipation effects
+## What Remains Fragile
 
-**What the data do not support:**
-- Streaming intensity as the mechanism (negative dose-response)
-- A consistent effect across albums (extreme heterogeneity)
-- Proportionality to streaming volume (Tier 2 too large)
+### Out-of-sample behavior
 
-**Alternative explanations to consider:**
-- Coincidence with other Friday events (concerts, parties, album release events)
-- Her Loss as an outlier (34% of effect from one album)
-- Residual confounding not captured by fixed effects
+| Tier | Period | N | Effect | 95% CI |
+|------|--------|---|--------|--------|
+| 0 | Pre-2018 | 10 | +6.4 | [−4.2, +17.0] |
+| 1 | Paper (2018-2022) | 10 | +16.1 | [+4.1, +28.1] |
+| 2 | Extended | 10 | +13.1 | [−1.9, +28.0] |
+| **3** | **Post-2022** | **7** | **−2.8** | **[−10.3, +4.8]** |
 
-## Running the Analysis
+The effect does not appear for seven major 2023-2024 releases. Note this is estimator-dependent:
+the paper-specification regression on Tier 3 gives −8.0 (SE 7.56), the residual mean gives −2.8,
+and the raw release-day-versus-window comparison — the unadjusted analogue of the paper's own
+139.1 vs 120.9 — gives **+5.6**. All three straddle zero. See [t20_extended_series.md](tabs/t20_extended_series.md).
 
-### Requirements
+### Dependence on one album
+
+Leave-one-out: dropping *Her Loss* (4 Nov 2022, local δ = +59.5) moves the pooled local mean from
++23.0 to +18.9. A broad behavioral mechanism should not lean this hard on one treated unit.
+See [t06_leave_one_out.md](tabs/t06_leave_one_out.md).
+
+### No detectable dose-response — but the test has no power
+
+| Album | Streams (M) | Effect |
+|-------|-------------|--------|
+| Midnights | 184.7 | −1.8 |
+| Certified Lover Boy | 153.4 | +11.0 |
+| Un Verano Sin Ti | 145.8 | +6.0 |
+| Scorpion | 132.4 | +16.4 |
+| Her Loss | 97.4 | +57.2 |
+
+Pearson r = **−0.17 across the 20 Tier 1+2 albums, p = 0.48, 95% CI [−0.57, +0.30]**. The interval
+contains a substantial positive dose-response, so this is an absence of evidence rather than
+evidence of absence. Two further caveats: Tier-1-only gives r = −0.50 (p = 0.15), and eight of the ten Tier 2
+streaming counts are **estimated from chart position rather than measured**
+(see [albums_sources.md](data/albums_sources.md)), so half the x-axis is constructed.
+See [t03_dose_response.md](tabs/t03_dose_response.md).
+
+### Small number of treated units
+
+Ten release days. Both the original estimate and every diagnostic here inherit that.
+The replication's own p-value is 0.042, not p < 0.01.
+
+### Crash composition shifts
+
+| Outcome | Effect | p |
+|---------|--------|---|
+| Mean crash latitude | +0.37° | 0.02 |
+| Mean crash longitude | −0.19° | 0.59 |
+| Mean vehicles per crash | +0.00 | 0.97 |
+
+Fatal crashes on release days sit about 0.37 degrees farther north than the model predicts.
+This is **not** a placebo failure, contrary to how an earlier version of this repository
+described it: mean latitude is a summary of the same crashes whose count is the outcome, so it
+moves whenever the extra crashes are geographically non-uniform. It says something about *where*,
+not about whether the estimator is picking up noise.
+See [t28b_structural_fars_composition.md](tabs/t28b_structural_fars_composition.md).
+
+### Overlapping event windows
+
+Six of the 200 control-day rows are themselves other albums' release days (Donda ↔ Certified
+Lover Boy, 5 days apart; Un Verano ↔ Mr. Morale ↔ Harry's House, 7 days apart). Treated days
+serving as controls biases the pooled estimate toward zero. This affects the original paper
+equally. The `window_overlap` gate reports it on every run.
+
+### The sober-versus-drunk mechanism test rests on two albums
+
+`DRUNK_DR` leaves the FARS accident file after 2020, so only *Scorpion* (2018) and *Folklore*
+(2020) survive. The point estimates (+14.7 with no driver at BAC ≥ 0.08, +3.5 with one) are a
+description of two dates; no standard error is reportable and none is shown.
+See [t22_drunk_mechanism.md](tabs/t22_drunk_mechanism.md).
+
+## Where The Evidence Points
+
+| Evidence | Finding | Reading |
+|----------|---------|---------|
+| Replication | +17.6 vs +18.2 | The result is not a coding artifact |
+| Random-Friday placebo | p = 0.0003 | Day-of-week does **not** explain it |
+| Pre-trend joint test | p = 0.19 | No systematic pre-trends |
+| Specification multiverse | 6 of 7 configurations significant | Not a single-specification artifact |
+| Effect concentrated on day 0 | t = 3.04 | Event-specific timing |
+| Post-2022 | −2.8 [−10.3, +4.8] | Does not reappear out of sample |
+| Dose-response | r = −0.17, CI [−0.57, +0.30] | Uninformative, not contrary |
+| Ten treated units | p = 0.042 | Inference is fragile at this N |
+
+## Bottom Line
+
+The paper's estimate replicates closely and survives the diagnostics that were supposed to
+overturn it. The Friday concentration, which looked like the obvious confound, is absorbed by the
+paper's own fixed effects: random Fridays reproduce it 3 times in 10,000, and the previous Friday in
+the event window is flat.
+
+What is left is a genuinely small-sample result. Ten release days, an estimate that depends
+noticeably on one of them, no reappearance in 2023-2024, and a dose-response test too weak to
+discriminate. That is a reason to want more treated units, not a reason to think the anomaly is
+a day-of-week artifact.
+
+## Data
+
+| Dataset | Coverage | N |
+|---------|----------|---|
+| FARS fatalities | 2007-2024 | 6,575 days; annual totals gated against the FARS Final File |
+| Albums | 37 total | 10 Tier 1 (paper) + 10 Tier 2 + 10 pre-2018 + 7 post-2022 |
+
+- **FARS**: [NHTSA Fatality Analysis Reporting System](https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars)
+- **Streaming**: Tier 1 from the paper's Table 1; Tier 2 estimated from chart position; Tier 0 unsourced placeholders, unused in any dose-response. See [albums_sources.md](data/albums_sources.md)
+
+## Output Tables
+
+| File | Description |
+|------|-------------|
+| [t01_local_estimates.md](tabs/t01_local_estimates.md) | Per-album local effects |
+| [t02_global_estimates.md](tabs/t02_global_estimates.md) | Per-album global effects |
+| [t03_dose_response.md](tabs/t03_dose_response.md) | Streams vs effect |
+| [t04_tier_comparison.md](tabs/t04_tier_comparison.md) | Tier 1 vs Tier 2 |
+| [t05_randomization_inference.md](tabs/t05_randomization_inference.md) | RI p-values |
+| [t06_leave_one_out.md](tabs/t06_leave_one_out.md) | Jackknife analysis |
+| [t07_summary.md](tabs/t07_summary.md) | Summary statistics |
+| [t08_placebo_tests.md](tabs/t08_placebo_tests.md) | Placebo results |
+| [t09_window_sensitivity.md](tabs/t09_window_sensitivity.md) | Window sensitivity |
+| [t10_forecast_estimates.md](tabs/t10_forecast_estimates.md) | Forecast estimates |
+| [t11_forecast_summary.md](tabs/t11_forecast_summary.md) | Forecast summary |
+| [t12_paper_replication.md](tabs/t12_paper_replication.md) | Paper replication comparison |
+| [t13_dynamic_effects.md](tabs/t13_dynamic_effects.md) | Event study |
+| [t18_friday_placebo.md](tabs/t18_friday_placebo.md) | Random-Friday placebo |
+| [t18b_cherry_pick_benchmark.md](tabs/t18b_cherry_pick_benchmark.md) | Date-selection benchmark (not a placebo) |
+| [t20_extended_series.md](tabs/t20_extended_series.md) | Extended time series |
+| [t21_fars_controls.md](tabs/t21_fars_controls.md) | Weather controls |
+| [t22_drunk_mechanism.md](tabs/t22_drunk_mechanism.md) | BAC split (n = 2) |
+| [t23_power_analysis.md](tabs/t23_power_analysis.md) | Power analysis |
+| [t24_balance_check.md](tabs/t24_balance_check.md) | Covariate balance |
+| [t27_sensitivity.md](tabs/t27_sensitivity.md) | Sensitivity analysis |
+| [t28b_structural_fars_composition.md](tabs/t28b_structural_fars_composition.md) | Crash composition on release days |
+| [t29_multiverse.md](tabs/t29_multiverse.md) | Specification curve |
+| [t32_parallel_trends.md](tabs/t32_parallel_trends.md) | Parallel trends test |
+
+## Usage
 
 ```bash
-pip install pandas numpy matplotlib scipy requests
+pip install -r requirements.txt
+
+make extract        # Extract FARS CSVs from zips
+make run            # Run the full analysis
+make lint           # black, isort, flake8
 ```
 
-### Usage
+### Data Setup
 
-```bash
-make extract        # Extract CSVs from zips
-make run            # Run analysis
-make run-placebos   # Run with placebo tests
-make clean          # Remove extracted files
-```
+1. Download FARS zip files from [NHTSA](https://www.nhtsa.gov/file-downloads) → `data/raw/`
+2. Run `make extract` to extract accident CSVs
+3. Album data in `data/albums.csv` with sources in `data/albums_sources.md`
 
-### Downloading FARS Data
+### Build gates
 
-1. Visit [NHTSA FARS Data](https://www.nhtsa.gov/file-downloads)
-2. Download FARS zip files for desired years → place in `data/raw/`
-3. Extract accident CSVs → place in `data/fars/`
-4. Run with `--local data/fars/` flag
+`src/gates.py` runs at the top of every pipeline invocation and raises, rather than warns, if:
 
-## Project Structure
+- Tier 1 drifts from the paper's Table 1 (albums, dates, or streaming counts)
+- The daily series has gaps or duplicate dates
+- Annual fatality totals do not match the FARS Final File
 
-```
-farce/
-├── Makefile
-├── data/
-│   ├── fars/              # Extracted accident CSVs (not tracked)
-│   └── raw/               # FARS zip files (not tracked)
-├── figs/                  # Output figures (not tracked)
-├── tabs/                  # Output tables (not tracked)
-└── src/
-    ├── constants.py       # Album lists, release dates
-    ├── s01_load.py        # Data loading
-    ├── s02_preprocess.py  # Residualization
-    ├── s03_core.py        # Analysis functions
-    ├── s04_placebo.py     # Placebo tests
-    ├── s05_visualize.py   # Plotting
-    └── pipeline.py        # Main entry point
-```
+It also reports how many control-day rows are contaminated by other releases. Two further
+guards live in the estimation code: `build_design_matrix` raises on a requested control column
+it cannot find (silently dropping them once turned three rows of the weather table into
+copies of the base model), and `album_stats` returns no standard error below five treated
+units (which is what produced a t of −27 from three albums).
 
 ## Visualization
 
 ![Analysis Results](figs/analysis.png)
 
-Six-panel figure showing:
-1. Time series of residualized fatalities with release dates marked
-2. Individual event study curves (showing heterogeneity)
-3. Local vs global counterfactual decomposition by album
-4. Randomization inference null distribution
-5. Leave-one-out sensitivity analysis
-6. Dose-response scatter (streams vs effect)
-
-## Data Sources
-
-- **FARS**: [NHTSA Fatality Analysis Reporting System](https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars)
-- **Streaming estimates**: ChartMasters, RouteNote, Wikipedia first-day/first-week data
-
 ## References
 
-- Patel, Worsham, Liu & Jena (2026). "Smartphones, Online Music Streaming, and Traffic Fatalities." NBER Working Paper 34866.
+- Patel, Worsham, Liu & Jena (2026). "[Smartphones, Online Music Streaming, and Traffic Fatalities](https://www.nber.org/papers/w34866)." NBER Working Paper 34866. [[PDF]](w34866.pdf)
 - [Harvard Gazette coverage](https://news.harvard.edu/gazette/story/2026/02/streaming-a-new-album-release-while-driving-may-increase-risk-of-fatal-car-accidents/)
+- [Freakonomics podcast](https://freakonomics.com/podcast/do-taylor-swift-and-bad-bunny-have-blood-on-their-hands/)
+- [New York Times](https://www.nytimes.com/2026/04/10/well/car-crashes-streaming-friday-harvard.html)

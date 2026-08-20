@@ -1,0 +1,12 @@
+| artist            | album                         | date       |   baseline_fatalities |   overall_mean |   friday_mean |   pct_above_avg |   pct_above_friday | is_holiday_weekend   | notes             |
+|:------------------|:------------------------------|:-----------|----------------------:|---------------:|--------------:|----------------:|-------------------:|:---------------------|:------------------|
+| Taylor Swift      | Midnights                     | 2022-10-21 |                108.67 |         101.39 |        110.58 |            7.18 |              -1.73 | False                |                   |
+| Drake             | Certified Lover Boy           | 2021-09-03 |                117.11 |         101.39 |        110.58 |           15.5  |               5.91 | True                 | Labor Day weekend |
+| Bad Bunny         | Un Verano Sin Ti              | 2022-05-06 |                102.33 |         101.39 |        110.58 |            0.93 |              -7.45 | False                |                   |
+| Drake             | Scorpion                      | 2018-06-29 |                110.56 |         101.39 |        110.58 |            9.04 |              -0.02 | False                |                   |
+| Kendrick Lamar    | Mr. Morale & The Big Steppers | 2022-05-13 |                104.67 |         101.39 |        110.58 |            3.23 |              -5.34 | False                |                   |
+| Kanye West        | Donda                         | 2021-08-29 |                106.56 |         101.39 |        110.58 |            5.09 |              -3.64 | False                |                   |
+| Taylor Swift      | Red (Taylor's Version)        | 2021-11-12 |                102.78 |         101.39 |        110.58 |            1.37 |              -7.05 | False                |                   |
+| Taylor Swift      | Folklore                      | 2020-07-24 |                109.33 |         101.39 |        110.58 |            7.83 |              -1.12 | False                |                   |
+| Harry Styles      | Harry's House                 | 2022-05-20 |                106.89 |         101.39 |        110.58 |            5.42 |              -3.33 | False                |                   |
+| Drake & 21 Savage | Her Loss                      | 2022-11-04 |                108.28 |         101.39 |        110.58 |            6.79 |              -2.08 | False                |                   |
